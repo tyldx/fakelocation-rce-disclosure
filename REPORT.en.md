@@ -247,10 +247,10 @@ Local self-protection (official-site/GitHub build only):
 - 2026-11-05: CVE requested from MITRE.
 - 2026-11-05: Report published; reported to Google Play (policy against downloading or executing
   server-controlled code) and GitHub (a release distributing a binary with this undisclosed code).
-- Vendor not notified: the affected code is present in releases signed with the vendor's certificate, and
-  the vendor's server can trigger the functionality; this report therefore did not use coordinated prior
-  disclosure and was instead published and submitted to the platforms directly. The repository had
-  already been archived by the owner on 2026-08-20.
+- 2026-11-05: Vendor notified by email after publication and asked whether it will request a CVE ID. The
+  report was published without prior coordinated disclosure because the affected code is present in
+  releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
+  The repository had already been archived by the owner on 2026-08-20.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
