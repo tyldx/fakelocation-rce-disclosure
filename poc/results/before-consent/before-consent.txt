@@ -1,0 +1,13 @@
+Target: dev.lerist.fakelocation 1.5.2 (Play), Pixel 9, fresh install (first launch after pm clear).
+Procedure: after launching MainActivity, no tap was sent; the Terms-of-Use consent dialog stayed on
+screen and "Agree" was never tapped. Confirms that getNotices is requested and processed during the
+loading phase, before the user consents.
+
+INJECT (module rewrote the getNotices response to 10000:id>...):
+11-05 15:16:45.946 I/FLRcePoC(19966): INJECT notice @ https://notice.api.fakeloc.cc:4430/Notice/getNotices -> 10000:id > /data/local/tmp/poc_notice_sh.txt 2>&1
+
+Command output poc_notice_sh.txt (mtime=2026-11-05 15:16:45.988003737 +0800):
+uid=10358(u0_a358) gid=10358(u0_a358) groups=10358(u0_a358),3003(inet),9997(everybody),20358(u0_a358_cache),50358(all_a358) context=u:r:untrusted_app_34:s0:c102,c257,c512,c768
+
+UI state at execution: uiautomator shows text="同意" (Agree, not tapped); topResumedActivity=MainActivity.
+Screenshot: consent-screen-while-cmd-ran.png

