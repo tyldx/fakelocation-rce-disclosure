@@ -7,7 +7,10 @@ Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · rev
 FakeLocation is an Android app that lets users simulate the device's GPS location, for mock-location
 and route simulation. An optional ROOT mode requires the user to grant root access. Executing
 server-supplied shell commands is not required for that purpose and is not part of the app's documented
-functionality.
+functionality. The vendor has acknowledged that this shell interface exists and is not described in the
+user agreement (stating that the user agreement and privacy policy will be improved) and that su usage
+will be removed in an upcoming version; the vendor's stated purpose for it — controlling pirated or
+cracked builds — has not been independently verified.
 
 Every version examined is affected: 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta, 1.3.10, 1.5.0, and 1.5.2
 (versionCode 1579-1702), with other releases in that range presumed affected. 1.3.2.1 is the earliest version available on
@@ -265,8 +268,10 @@ app's own injection and anti-tamper), so it was left undriven to avoid side effe
 
 Boundary: this is a client-side demonstration (the response is injected locally), proving the client
 executes server-controlled commands; it does not prove the vendor's server currently sends them. The
-primary evidence is the static code branches in section 4. The vendor states that it currently sends a
-long sleep command to pirated or cracked versions; this has not been independently verified.
+primary evidence is the static code branches in section 4. The vendor has acknowledged that this
+interface exists and that it is not described in the user agreement; the vendor further states that it
+currently sends only a long sleep command to pirated or cracked versions, which has not been
+independently verified.
 
 ## 7. Reproduction and forensics
 
@@ -278,31 +283,21 @@ long sleep command to pirated or cracked versions; this has not been independent
 
 ## 8. Other undisclosed behavior (corroborating, non-core)
 
-These are other undisclosed behaviors. The first two are server-controlled; the rest are local
-self-protection mechanisms (not server-controlled).
+These are peripheral observations listed for completeness; they are not part of the core finding and are
+not required to establish it.
 
-Server-controlled:
-- Remote kill: the account-sync callback (official-site/GitHub build `ba2`), on `code == 9999`, first
-  runs `kill -9 <own pid>` via sh, then `System.exit(0)`, letting the server terminate the client process.
-- Remote disable (official-site/GitHub build; not confirmed for Play): the dex injected into
-  system_server (`C0084`/`C0036`) opens a plain TCP connection (no TLS) from inside system_server to
-  `vef.api.fakeloc.cc:12309`, switching to `vef.fl.api.lerist.dev` after 30 minutes disconnected and to the
-  hardcoded IP `141.164.37.97` after 1 hour. It sends license data and version info, encrypted with
-  AES/CFB (key and IV hardcoded; values redacted in the public version). A `NOPASS.` reply stops mocking,
-  as does 24 hours without a `pass.` reply. The traffic leaves as system_server's uid 1000, so per-app-uid
-  firewalls and traffic accounting do not attribute it to the app.
+Server-controlled: a remote-kill branch (account-sync callback, official-site/GitHub build `ba2`) runs
+`kill -9 <own pid>` then `System.exit(0)` on `code == 9999`; and a dex injected into system_server
+(`C0084`/`C0036`, official-site/GitHub build, not confirmed for Play) opens a non-TLS TCP connection to
+`vef.api.fakeloc.cc:12309` (falling back to `vef.fl.api.lerist.dev` after 30 minutes, then hardcoded IP
+`141.164.37.97` after 1 hour) and stops mocking on a `NOPASS.` reply or after 24 hours without a `pass.`
+reply.
 
-Local self-protection (official-site/GitHub build only):
-- Anti-tamper reboot (`RunnableC13526`): runs md5sum over the app's files directory; on mismatch with the
-  built-in hashes, if root is available it runs `killall system_server` (soft reboot) with ~60%
-  probability or `reboot` with ~40%, and separately exits the process with ~60% probability; the command
-  strings are split and concatenated to evade static scanning.
-- APK integrity check (`C13595.m51176`): checks version name, version code, package name, APK size,
-  `libsa.so` size, and APK md5; on mismatch it only throws, so later init (path 3 poller, injection) does
-  not start; no reboot.
-- Build-expiry mechanism: build timestamp + 200 days; after expiry it throws, and path 3 (the poller),
-  injection, and init no longer start. 1.5.2 expires 2027-03-08; 1.5.0 expired 2026-10-26. Paths 1 and 2
-  are not gated by this mechanism.
+Local self-protection (official-site/GitHub build only): an anti-tamper routine (`RunnableC13526`) may
+soft-reboot or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
+mismatch; and a build-expiry mechanism (build timestamp + 200 days; 1.5.2 expires 2027-03-08, 1.5.0
+expired 2026-10-26) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
+these.
 
 ## 9. User remediation
 
@@ -324,16 +319,26 @@ Local self-protection (official-site/GitHub build only):
   report was published without prior coordinated disclosure because the affected code is present in
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
   The vendor's GitHub repository (Lerist/FakeLocation) had been archived by its owner on 2026-08-20.
-- 2026-11-06: Vendor replied that the shell interface was intended to control pirated or cracked versions,
-  that only a long sleep command is currently sent to those versions, and that su usage will be removed in
-  an upcoming version, with the user agreement and privacy policy to be improved. These statements have not been
-  independently verified, and the client code contains no restriction limiting these paths to pirated builds
-  (based on the analysis in section 4). The vendor's commitment concerns removing su usage and does not
-  mention removing the shell interface itself; with su removed alone, path 1 and the sh branches of paths 2
-  and 3 would still execute server-supplied commands at app privilege (based on section 4).
+- 2026-11-06: Vendor replied. Acknowledged (vendor's confirmed position): the shell interface exists and
+  is not described in the user agreement (the vendor states the user agreement and privacy policy will be
+  improved); the interface overuses the su permission; and su usage will be removed in an upcoming version.
+  Stated but not independently verified: that the interface was intended to control pirated or cracked
+  versions and that only a long sleep command is currently sent to those versions. Any such targeting would
+  be applied server-side; the client code contains no limitation restricting these paths to pirated builds,
+  and the client cannot verify any server-side targeting, so the targeting claim cannot be confirmed from
+  the client (based on the analysis in section 4). The vendor's stated commitment concerns removing su
+  usage and does not mention removing the shell interface itself; with su removed alone, path 1 and the sh
+  branches of paths 2 and 3 would still execute server-supplied commands at app privilege (based on section 4).
+- 2026-11-06: Reporter followed up by email, asking the vendor to confirm: (1) whether the upcoming
+  version removes server-supplied shell execution entirely or only su; (2) which version will contain the
+  fix and when it will be released; (3) whether the vendor will request a CVE ID from the MITRE CNA of Last
+  Resort. The vendor's response will be summarized in this report when received.
 - 2026-11-07: Report revised (1.3). Affected range extended to 1.3.2.1 through 1.5.2; added that the
   startup config request and version check run through su before user consent, with a live test on
-  official-site/GitHub 1.5.2; corrected details on polling frequency, anti-tamper, and signing.
+  official-site/GitHub 1.5.2; corrected details on polling frequency, anti-tamper, and signing. Correction:
+  earlier revisions (1.0-1.2) stated that versions 1.3.5-beta and earlier were not affected; that
+  conclusion was incorrect — path 2 (the config endpoint `app/getAppConfigs`) is present from 1.3.2.1, the
+  earliest version examined — and is corrected in this revision.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
