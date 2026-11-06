@@ -1,16 +1,17 @@
 # FakeLocation: undocumented execution of server-supplied shell commands
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.3
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.5
 
 ## 1. Summary
 
 FakeLocation is an Android app that lets users simulate the device's GPS location, for mock-location
 and route simulation. An optional ROOT mode requires the user to grant root access. Executing
 server-supplied shell commands is not required for that purpose and is not part of the app's documented
-functionality. The vendor has acknowledged that this shell interface exists and is not described in the
-user agreement (stating that the user agreement and privacy policy will be improved) and that su usage
-will be removed in an upcoming version; the vendor's stated purpose for it — controlling pirated or
-cracked builds — has not been independently verified.
+functionality. The vendor has acknowledged that this shell interface exists and overuses the su
+permission, and stated that su usage will be removed in an upcoming version and that the user agreement
+and privacy policy will be improved; the reporter's analysis (section 4.4) is that neither document
+currently discloses this functionality. The vendor's stated purpose for the interface — controlling
+pirated or cracked builds — has not been independently verified.
 
 Every version examined is affected: 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta, 1.3.10, 1.5.0, and 1.5.2
 (versionCode 1579-1702), with other releases in that range presumed affected. 1.3.2.1 is the earliest version available on
@@ -215,29 +216,22 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   or anyone who compromises Lerist's server or steals its server private key. This functionality is
   therefore controllable by the developer and also creates a supply-chain single point of failure: a
   breach of the vendor's infrastructure yields RCE and privilege escalation across the affected install base.
-- CVSS v3.1, scored per path (shared prefix AV:N/AC:H/PR:N: the command is delivered over the network
-  and requires control of the certificate-pinned server):
-  - Path 1 (sh, app uid): `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = 8.1. The command is bounded by the
-    app's own privileges (S:U).
-  - Path 2, Play 1.5.2 (su, root, needs the renewal page opened; the startup config request and version
-    check are sh only, as path 1): `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = 8.3.
-  - Path 2, official-site/GitHub build and Play 1.5.0 and earlier (su, root, startup config request /
-    version check, no interaction):
-    `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0.
-  - Path 3 (su, root; official-site/GitHub build only, requires ROOT mode activated, no further
-    interaction after activation): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0.
-  - Overall 9.0 (Critical), reached by path 2 and path 3 on the official-site/GitHub build; the startup
-    route of path 2 is live-tested (see 6), so the top score does not rely on the static-only path 3. Note: if the vendor itself is treated as the
-    attacker (no precondition), AC:L raises each path.
-- CVSS v4.0, scored per path (official calculator):
-  - Path 1 (sh, app uid): `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = 9.2.
-  - Path 2, Play 1.5.2 (su, root, renewal page): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.0.
-  - Path 2, official-site/GitHub build and Play 1.5.0 and earlier (su, root, startup config request / version check): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5.
-  - Path 3 (su, root, background poll): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5.
-  - Overall 9.5 (path 2 and path 3 on the official-site/GitHub build). AT:P on paths 2/3 reflects that root must have been granted (path 3 also needs
-    ROOT mode activated); SC/SI/SA:H reflect escape to root (paths 2/3), N for the app-scoped path 1.
-    Path 3 is static-confirmed only; setting Exploit Maturity E:U or E:P lowers its score. Path 2 on Play
-    1.5.2 (9.0) scores below path 1 (9.2) because of the AT:P and UI:P deductions.
+- CVSS, scored per path. Shared v3.1 prefix `AV:N/AC:H/PR:N` (the command is delivered over the network
+  and requires control of the certificate-pinned server); the root paths carry v4.0 `AT:P` because root
+  must already have been granted.
+
+  | Path (variant) | CVSS v3.1 | CVSS v4.0 |
+  |---|---|---|
+  | 1 — sh, app uid | `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = **8.1** | `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = **9.2** |
+  | 2 — su/root, Play 1.5.2 (renewal page opened; startup config/version-check are sh only) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
+  | 2 — su/root, official-site/GitHub & Play ≤1.5.0 (startup, no interaction) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+  | 3 — su/root, official-site/GitHub only (ROOT mode activated; background poll) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+
+  Overall **9.0 (v3.1) / 9.5 (v4.0)**, Critical, reached by path 2 and path 3 on the official-site/GitHub
+  build. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
+  path 1 stays app-scoped (`S:U` / `SC:SI:SA:N`). Path 2's startup route is live-tested (see 6), so the top
+  score does not depend on the static-only path 3 (setting Exploit Maturity `E:U`/`E:P` lowers path 3). If
+  the vendor itself is the attacker (no precondition), `AC:L` raises each score.
 
 ## 6. Proof of concept
 
@@ -269,9 +263,8 @@ app's own injection and anti-tamper), so it was left undriven to avoid side effe
 Boundary: this is a client-side demonstration (the response is injected locally), proving the client
 executes server-controlled commands; it does not prove the vendor's server currently sends them. The
 primary evidence is the static code branches in section 4. The vendor has acknowledged that this
-interface exists and that it is not described in the user agreement; the vendor further states that it
-currently sends only a long sleep command to pirated or cracked versions, which has not been
-independently verified.
+interface exists; it further states that it currently sends only a long sleep command to pirated or
+cracked versions, which has not been independently verified.
 
 ## 7. Reproduction and forensics
 
@@ -320,8 +313,9 @@ these.
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
   The vendor's GitHub repository (Lerist/FakeLocation) had been archived by its owner on 2026-08-20.
 - 2026-11-06: Vendor replied. Acknowledged (vendor's confirmed position): the shell interface exists and
-  is not described in the user agreement (the vendor states the user agreement and privacy policy will be
-  improved); the interface overuses the su permission; and su usage will be removed in an upcoming version.
+  overuses the su permission; and stated that su usage will be removed in an upcoming version and that the
+  user agreement and privacy policy will be improved. The reporter's analysis (section 4.4) is that neither
+  document discloses this functionality.
   Stated but not independently verified: that the interface was intended to control pirated or cracked
   versions and that only a long sleep command is currently sent to those versions. Any such targeting would
   be applied server-side; the client code contains no limitation restricting these paths to pirated builds,
