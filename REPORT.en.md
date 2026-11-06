@@ -7,10 +7,11 @@ Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · rev
 FakeLocation is an Android app that lets users simulate the device's GPS location, for mock-location
 and route simulation. An optional ROOT mode requires the user to grant root access. Executing
 server-supplied shell commands is not required for that purpose and is not part of the app's documented
-functionality. The vendor has acknowledged that this shell interface exists and is not described in the
-user agreement (stating that the user agreement and privacy policy will be improved) and that su usage
-will be removed in an upcoming version; the vendor's stated purpose for it — controlling pirated or
-cracked builds — has not been independently verified.
+functionality. The vendor has acknowledged that this shell interface exists and overuses the su
+permission, and stated that su usage will be removed in an upcoming version and that the user agreement
+and privacy policy will be improved; the reporter's analysis (section 4.4) is that neither document
+currently discloses this functionality. The vendor's stated purpose for the interface — controlling
+pirated or cracked builds — has not been independently verified.
 
 Every version examined is affected: 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta, 1.3.10, 1.5.0, and 1.5.2
 (versionCode 1579-1702), with other releases in that range presumed affected. 1.3.2.1 is the earliest version available on
@@ -269,9 +270,8 @@ app's own injection and anti-tamper), so it was left undriven to avoid side effe
 Boundary: this is a client-side demonstration (the response is injected locally), proving the client
 executes server-controlled commands; it does not prove the vendor's server currently sends them. The
 primary evidence is the static code branches in section 4. The vendor has acknowledged that this
-interface exists and that it is not described in the user agreement; the vendor further states that it
-currently sends only a long sleep command to pirated or cracked versions, which has not been
-independently verified.
+interface exists; it further states that it currently sends only a long sleep command to pirated or
+cracked versions, which has not been independently verified.
 
 ## 7. Reproduction and forensics
 
@@ -320,8 +320,9 @@ these.
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
   The vendor's GitHub repository (Lerist/FakeLocation) had been archived by its owner on 2026-08-20.
 - 2026-11-06: Vendor replied. Acknowledged (vendor's confirmed position): the shell interface exists and
-  is not described in the user agreement (the vendor states the user agreement and privacy policy will be
-  improved); the interface overuses the su permission; and su usage will be removed in an upcoming version.
+  overuses the su permission; and stated that su usage will be removed in an upcoming version and that the
+  user agreement and privacy policy will be improved. The reporter's analysis (section 4.4) is that neither
+  document discloses this functionality.
   Stated but not independently verified: that the interface was intended to control pirated or cracked
   versions and that only a long sleep command is currently sent to those versions. Any such targeting would
   be applied server-side; the client code contains no limitation restricting these paths to pirated builds,
