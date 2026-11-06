@@ -1,11 +1,12 @@
 # Page archives (archive.today)
 
-Archived 2026-11-04/05. Shows that the vendor's public text does not disclose remote command execution.
+Archived 2026-11-04/06. Shows that the vendor's public text does not disclose remote command execution.
 
 | Page | Lang | Original URL | Archive short link | Archive timestamp link |
 |---|---|---|---|---|
 | Privacy Policy (privacy_policy) | zh | page.fakeloc.cc/zh/privacy_policy.html | https://archive.today/OK0Jk | http://archive.today/2026.11.04-171525/http://page.fakeloc.cc/zh/privacy_policy.html |
 | Terms of Use (terms_of_use) | zh | page.fakeloc.cc/zh/terms_of_use.html | https://archive.today/MyhhH | http://archive.today/2026.11.04-175420/http://page.fakeloc.cc/zh/terms_of_use.html |
+| User Agreement (user_agreement) | zh | page.fakeloc.cc/zh/user_agreement.html | https://archive.today/PlS7t | http://archive.today/2026.11.06-165326/http://page.fakeloc.cc/zh/user_agreement.html |
 | User Agreement (user_agreement) | en | page.fakeloc.cc/en/user_agreement.html | https://archive.today/Iulzs | http://archive.today/2026.11.04-175918/http://page.fakeloc.cc/en/user_agreement.html |
 | Privacy Policy (privacy_policy) | en | page.fakeloc.cc/en/privacy_policy.html | https://archive.today/jYorF | http://archive.today/2026.11.05-010037/http://page.fakeloc.cc/en/privacy_policy.html |
 | Precaution (precaution) | en | page.fakeloc.cc/en/precaution.html | https://archive.today/GOemo | http://archive.today/2026.11.05-005606/http://page.fakeloc.cc/en/precaution.html |

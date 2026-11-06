@@ -14,17 +14,22 @@
 - goods/getRenewalGoodsList → `{"code":10000,"message":"id>..."}` 触发同步回调的 su+sh (通道二)
 - ver/vfs → 同上 (通道三, 官网/GitHub 版后台轮询, 需激活 ROOT 模式, 未实测)
 
-加壳 App 的 okhttp 晚于默认 loader, 故 hook 所有 BaseDexClassLoader 构造, 新 loader 能加载目标类时装钩。
-构建 `gradle assembleDebug`; 产物 app-debug.apk 在 LSPosed 启用并勾两个包作用域后生效。
+通道二还包括早于用户同意发出的启动请求 `app/getAppConfigs` 与 `version/checkApkUpdate`: 除 Play 1.5.2 外,
+所有已检查构建均走 su+sh; 只有 Play 1.5.2 只走 sh。官网/GitHub 1.5.2 的版本检查已实测, 配置请求仅静态确认。
 
-## 类/方法映射 (运行时解密 dex 的实际混淆名)
+实测的 1.5.2 加壳构建中, okhttp 晚于默认 loader, 故 hook 所有 BaseDexClassLoader 构造, 新 loader 能加载目标类时装钩。
+构建 `gradle assembleDebug`; 产物 app-debug.apk 在 LSPosed 启用并勾两个包作用域后生效。
+1.3.10 之前的版本未加壳, 业务代码可直接从 APK 反编译得到。
+
+## 类/方法映射 (1.5.2; 运行时解密 dex 的实际混淆名)
 
 - 命令出口: Play `fv2.ළ(String[], boolean su, boolean)` / 官网-GitHub 版 `z41`、`C13588.m51168`,
   内部 `exec(su ? "su" : "sh")`。
-- 通用回调 su+sh: Play `C3685.m13605` / 官网-GitHub 版 `C5901`, `code==10000` 时 su + sh。
+- 同步通用回调 su+sh: Play `C3685.m13605` / 官网-GitHub 版 `C5901`, `code==10000` 时 su + sh。
 - getNotices sh: Play `C6073` / 官网-GitHub 版 `C11241`, `string().startsWith("10000:")` → `sh -c`。
 
 ## 结果
 
 见 `results/RESULTS.md`。Play 与官网/GitHub 两构建的通道一、二均已运行时验证 (sh = App uid, su = root);
-Play 另验证了"同意前执行" (`results/before-consent/`); 通道三仅静态确认。
+Play (`results/before-consent/`) 与官网/GitHub 1.5.2 的版本检查 (见 `results/RESULTS.md`) 均已验证"同意前执行";
+通道三仅静态确认。

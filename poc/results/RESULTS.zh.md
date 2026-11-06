@@ -11,7 +11,9 @@
 | 通道 | Play 1.5.2 (dev.lerist.fakelocation) | 官网/GitHub 1.5.2 (com.lerist.fakelocation) |
 |---|---|---|
 | 1 getNotices → sh | 已验证 App uid + 同意前执行 | 已验证 App uid |
-| 2 通用回调 → su root | 已验证 uid=0 | 已验证 uid=0 |
+| 2 goods/getRenewalGoodsList → 同步回调, su root | 已验证 uid=0 | 已验证 uid=0 |
+| 2 version/checkApkUpdate → 异步回调 | 仅 sh (静态分析) | 已验证同意前 su root、另证 sh App uid, 持续重试 |
+| 2 app/getAppConfigs → 异步回调 | 仅 sh (静态分析, 未单独实测) | su+sh (静态分析, 未单独实测) |
 | 3 ver/vfs 轮询 → su root | 不适用 | 仅静态(需激活 ROOT 模式, 与通道2同机制) |
 
 ## 证据文件
@@ -21,10 +23,15 @@
 - `poc_generic_sh_appuid.txt` — Play 通道2 的 sh 分支。
 - `cn_path1_notice_sh.txt` — 官网/GitHub 通道1, `uid=10355(u0_a355) ... untrusted_app_27`。
 - `cn_path2_generic_su_uid0.txt` — 官网/GitHub 通道2 su, `uid=0(root)`。
+- `cn_checkapkupdate_preconsent_root.txt`、`cn_checkapkupdate_consent_screen.png`、
+  `cn_checkapkupdate_su_sh_proof.txt` — 官网/GitHub 1.5.2 的版本检查: 持续注入记录 19 次
+  `uid=0(root) ... u:r:ksu:s0` 输出, 相邻约隔 6 至 8 秒; 00:57 的截图显示同意框仍在屏,
+  另有 `uid=10355(u0_a355)` 的 sh 输出。
 - `before-consent/` — Play 首装态: 命令于用户点"同意"之前执行的直接证据(截图 + 时间戳 + 结果文件)。
 - `inject_log.txt` `env.txt` — 模块日志与环境。inject_log 中除 getNotices / getRenewalGoodsList 外,
   还有发现阶段对 `getAppConfigs` / `version/checkApkUpdate` 的注入: 它们是同一通用回调的其他接口,
-  其中 checkApkUpdate 经静态确认走异步 sh 执行 (见报告 4.2), getAppConfigs 未逐一确认。
+  其中仅 Play 1.5.2 的 checkApkUpdate 异步分支只走 sh; 官网/GitHub 1.5.2 的 su+sh 分支已有上述实测
+  (见报告 4.2、6), getAppConfigs 仍未单独实测。
 
 ## 边界
 

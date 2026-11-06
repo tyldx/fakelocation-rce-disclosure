@@ -3,7 +3,8 @@
 [English](README.md)
 
 对 Android 应用 FakeLocation (包名 `com.lerist.fakelocation` / `dev.lerist.fakelocation`,
-开发者 Lerist / 成都览一科技) 的安全分析:应用含未公开的服务端可控命令执行功能,通用回调路径可达 root。
+开发者 Lerist / 成都览一科技) 的安全分析:应用含未公开的服务端可控命令执行功能,通用回调路径可达 root,
+且在应用启动时、用户同意之前即可触发。受影响版本为 1.3.2.1 至 1.5.2。
 
 报告人: [tyldx](https://github.com/tyldx) · 联系 tyldx@proton.me
 
@@ -14,6 +15,7 @@
 - `poc/` — 动态验证。`xposed-rce-poc/` 是 LSPosed PoC 模块源码(只 hook okhttp 响应,
   按 URL 改写触发 App 自身命令执行分支);`results/` 是 `id` 命令输出等证据。
 - `hashes/` — 样本 SHA-256。
+- `tools/` — `md2html.py` 将报告转为 HTML,再打印为 PDF。
 - `evidence/archive-urls.md` — 官网/政策页/商店/仓库的 archive.today 存档链接。
 
 ## 不包含

@@ -1,0 +1,23 @@
+===FINAL-OUTPUT===
+00:56:00.858972496 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:06.717073329 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:12.654316944 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:19.921811088 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:27.273250382 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:34.342004739 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:41.847650902 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:49.193023911 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:56:56.446332183 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:03.645361402 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:11.124844235 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:18.444709798 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:25.545677941 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:32.694096483 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:40.088424245 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:47.928545099 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:57:55.768274798 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:58:03.129076071 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+00:58:10.818274480 [uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0]
+===COUNT===
+19
+force-stopped

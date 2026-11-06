@@ -1,0 +1,15 @@
+WHOAMI=uid=0(root) gid=0(root) groups=0(root) context=u:r:ksu:s0
+=== INJECT count (this boot) ===
+46
+=== /data/local/tmp/ck_tmp (ksu-root writable only) ===
+file count: 9
+      9 uid=0(root)
+=== /data/data/<pkg>/ck_app (untrusted_app writable) ===
+file count: 17
+      9 uid=0(root)
+      8 uid=10355(u0_a355)
+=== sample root exec (tmp) ===
+==> /data/local/tmp/ck_tmp_1793986858038460752.txt <==
+=== sample app-uid exec (proves sh) ===
+/data/data/com.lerist.fakelocation/ck_app_1793986858171875831.txt
+uid=10355(u0_a355) gid=10355(u0_a355) groups=10355(u0_a355),3003(inet),9997(everybody),20355(u0_a355_cache),50355(all_a355) context=u:r:untrusted_app_27:s0:c99,c257,c512,c768
