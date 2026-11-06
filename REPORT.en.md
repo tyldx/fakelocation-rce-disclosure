@@ -208,7 +208,8 @@ app's own injection and anti-tamper), so it was left undriven to avoid side effe
 
 Boundary: this is a client-side demonstration (the response is injected locally), proving the client
 executes server-controlled commands; it does not prove the vendor's server currently sends them. The
-primary evidence is the static code branches in section 4.
+primary evidence is the static code branches in section 4. The vendor states that it currently sends a
+long sleep command to pirated or cracked versions; this has not been independently verified.
 
 ## 7. Reproduction and forensics
 
@@ -237,7 +238,8 @@ Local self-protection (official-site/GitHub build only):
 
 ## 9. User remediation
 
-- Uninstall affected versions (versionCode >= 1673, i.e. 1.3.10 onward).
+- Uninstall versions 1.3.10 through 1.5.2. For later versions, check the vendor's fix status and this
+  report's updates before continuing to use them.
 - Revoke any root previously granted to the app.
 - If an affected version was run on a root-granted device, treat the device as potentially having
   received commands, and assess accordingly (check for anomalies, reset if warranted).
@@ -247,6 +249,8 @@ Local self-protection (official-site/GitHub build only):
 - 2026-11-05: CVE requested from MITRE.
 - 2026-11-05: Report published; reported to Google Play (policy against downloading or executing
   server-controlled code) and GitHub (a release distributing a binary with this undisclosed code).
+- 2026-11-05: Also reported to Google through the Android Security Malware Report Form.
+- 2026-11-05: Reported to CNCERT by email.
 - 2026-11-05: Vendor notified by email after publication and asked whether it will request a CVE ID. The
   report was published without prior coordinated disclosure because the affected code is present in
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
