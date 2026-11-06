@@ -172,21 +172,20 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
 - 由于证书锁定且服务端私钥不在应用内, 任意第三方无法通过网络中间人触发 (基于静态分析)。实际可触发方为:
   开发者本人 (持服务端私钥、运营服务器), 或攻破 Lerist 服务器/窃取其服务端私钥者。因此该功能既受开发者
   控制, 也构成一处供应链单点: 一旦厂商基础设施被攻破, 即造成安装受影响版本设备的 RCE 与提权。
-- CVSS v3.1 按通道分别评 (共同前缀 AV:N/AC:H/PR:N: 命令经网络下发, 需控制被证书锁定的服务端):
-  - 通道一 (sh, 应用 uid): `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = 8.1。命令限于应用自身权限 (S:U)。
-  - 通道二, Play 1.5.2 (su, root, 需打开续费页; 启动时的配置请求与版本检查仅 sh, 同通道一): `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = 8.3。
-  - 通道二, 官网/GitHub 版与 Play 1.5.0 及更早 (su, root, 启动时配置请求/版本检查, 无需交互): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0。
-  - 通道三 (su, root; 仅官网/GitHub 版, 需已激活 ROOT 模式, 激活后无需进一步交互): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0。
-  - 整体 9.0 (Critical), 由官网/GitHub 版通道二、通道三达到; 其中通道二的启动路径已实测 (见 6), 故最高分
-    不依赖仅静态确认的通道三。口径说明: 若视厂商本人为攻击者 (对其无门槛) 取 AC:L, 各通道更高。
-- CVSS v4.0 按通道分别评 (官方计算器):
-  - 通道一 (sh, 应用 uid): `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = 9.2。
-  - 通道二, Play 1.5.2 (su, root, 续费页): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.0。
-  - 通道二, 官网/GitHub 版与 Play 1.5.0 及更早 (su, root, 启动时配置请求/版本检查): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5。
-  - 通道三 (su, root, 后台轮询): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5。
-  - 整体 9.5 (官网/GitHub 版通道二、通道三)。AT:P (通道二、三) 反映需已授予应用 root (通道三还需激活 ROOT 模式); SC/SI/SA:H
-    反映越出应用取得 root (通道二、三), 通道一仅应用范围故取 N。通道三仅静态确认, 把 Exploit Maturity
-    设为 E:U 或 E:P 会降低其分数。Play 1.5.2 通道二 (9.0) 低于通道一 (9.2), 是 AT:P 与 UI:P 扣分所致。
+- CVSS 按通道分别评。v3.1 共同前缀 `AV:N/AC:H/PR:N` (命令经网络下发, 需控制被证书锁定的服务端); root
+  通道的 v4.0 取 `AT:P`, 因需已授予应用 root。
+
+  | 通道 (变体) | CVSS v3.1 | CVSS v4.0 |
+  |---|---|---|
+  | 一 — sh, 应用 uid | `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = **8.1** | `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = **9.2** |
+  | 二 — su/root, Play 1.5.2 (需打开续费页; 启动时配置请求/版本检查仅 sh) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
+  | 二 — su/root, 官网/GitHub 版与 Play ≤1.5.0 (启动时, 无需交互) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+  | 三 — su/root, 仅官网/GitHub 版 (需激活 ROOT 模式; 后台轮询) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+
+  整体 **9.0 (v3.1) / 9.5 (v4.0)**, Critical, 由官网/GitHub 版通道二、通道三达到。通道二、三的 `S:C` /
+  `SC:SI:SA:H` 与 `AT:P` 反映授予 root 后越出应用取得 root; 通道一仅应用范围 (`S:U` / `SC:SI:SA:N`)。通道二
+  的启动路径已实测 (见 6), 故最高分不依赖仅静态确认的通道三 (把 Exploit Maturity 设为 `E:U`/`E:P` 会降低
+  通道三)。若视厂商本人为攻击者 (对其无门槛) 取 `AC:L`, 各分值更高。
 
 ## 6. 概念验证
 
