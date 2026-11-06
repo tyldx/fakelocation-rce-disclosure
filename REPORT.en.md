@@ -251,6 +251,11 @@ Local self-protection (official-site/GitHub build only):
   report was published without prior coordinated disclosure because the affected code is present in
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
   The repository had already been archived by the owner on 2026-08-20.
+- 2026-11-06: Vendor replied that the shell interface was intended to control pirated or cracked versions,
+  that only a long sleep command is currently sent to those versions, and that su usage will be removed in
+  an upcoming version, with the user agreement and privacy policy to be improved. These statements have not been
+  independently verified, and the client code contains no restriction limiting these paths to pirated builds
+  (based on the analysis in section 4).
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
