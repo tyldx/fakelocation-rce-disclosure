@@ -10,8 +10,8 @@
 
 ## 目录
 
-- `REPORT.zh.md` / `REPORT.en.md` — 正式报告(中/英); `REPORT.zh.pdf` / `REPORT.en.pdf` 为同一报告的
-  PDF 渲染版。
+- `REPORT.zh.md` / `REPORT.en.md` — 正式报告(中/英)。PDF 版不纳入本仓库跟踪,需要时用
+  `tools/md2html.py` 从 Markdown 按需生成。
 - `poc/` — 动态验证。`xposed-rce-poc/` 是 LSPosed PoC 模块源码(只 hook okhttp 响应,
   按 URL 改写触发 App 自身命令执行分支);`results/` 是 `id` 命令输出等证据。
 - `hashes/` — 样本 SHA-256。
