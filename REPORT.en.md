@@ -35,7 +35,7 @@ steals the key, which would expose every device running an affected version.
 - Two builds:
   - Official-site / GitHub build: package `com.lerist.fakelocation` (code flavor = CN), distributed via
     the official site fakeloc.cc/app and GitHub Releases (Lerist/FakeLocation); not on any app store.
-  - Play build: package `dev.lerist.fakelocation`, distributed on Google Play (50K+ installs).
+  - Play build: package `dev.lerist.fakelocation`, distributed on Google Play (50K+ installs, as of 2026-11-05).
 - Developer: Lerist / Chengdu Lanyi Technology Co., Ltd. (成都览一科技有限公司).
 - Versions examined: 1.3.2.1 (versionCode 1579), 1.3.2.2 (1584), 1.3.2.3 (1585), 1.3.5 (1588), 1.3.5-beta (1593), 1.3.10 (1673) (all
   Play builds), 1.5.0 (1700 official-site/GitHub, 1701 Play), and 1.5.2 (1702, both builds), all
@@ -223,7 +223,8 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
     `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0.
   - Path 3 (su, root; official-site/GitHub build only, requires ROOT mode activated, no further
     interaction after activation): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0.
-  - Overall 9.0 (Critical), reached by path 2 and path 3 on the official-site/GitHub build. Note: if the vendor itself is treated as the
+  - Overall 9.0 (Critical), reached by path 2 and path 3 on the official-site/GitHub build; the startup
+    route of path 2 is live-tested (see 6), so the top score does not rely on the static-only path 3. Note: if the vendor itself is treated as the
     attacker (no precondition), AC:L raises each path.
 - CVSS v4.0, scored per path (official calculator):
   - Path 1 (sh, app uid): `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = 9.2.
@@ -232,7 +233,8 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   - Path 3 (su, root, background poll): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5.
   - Overall 9.5 (path 2 and path 3 on the official-site/GitHub build). AT:P on paths 2/3 reflects that root must have been granted (path 3 also needs
     ROOT mode activated); SC/SI/SA:H reflect escape to root (paths 2/3), N for the app-scoped path 1.
-    Path 3 is static-confirmed only; setting Exploit Maturity E:U or E:P lowers its score.
+    Path 3 is static-confirmed only; setting Exploit Maturity E:U or E:P lowers its score. Path 2 on Play
+    1.5.2 (9.0) scores below path 1 (9.2) because of the AT:P and UI:P deductions.
 
 ## 6. Proof of concept
 
@@ -326,7 +328,9 @@ Local self-protection (official-site/GitHub build only):
   that only a long sleep command is currently sent to those versions, and that su usage will be removed in
   an upcoming version, with the user agreement and privacy policy to be improved. These statements have not been
   independently verified, and the client code contains no restriction limiting these paths to pirated builds
-  (based on the analysis in section 4).
+  (based on the analysis in section 4). The vendor's commitment concerns removing su usage and does not
+  mention removing the shell interface itself; with su removed alone, path 1 and the sh branches of paths 2
+  and 3 would still execute server-supplied commands at app privilege (based on section 4).
 - 2026-11-07: Report revised (1.3). Affected range extended to 1.3.2.1 through 1.5.2; added that the
   startup config request and version check run through su before user consent, with a live test on
   official-site/GitHub 1.5.2; corrected details on polling frequency, anti-tamper, and signing.

@@ -29,7 +29,7 @@ root 身份运行。其中一条在启动时、用户同意首启条款之前即
 - 两个构建:
   - 官网/GitHub 版: 包名 `com.lerist.fakelocation` (代码 flavor=CN), 经官网 fakeloc.cc/app 与
     GitHub Releases (Lerist/FakeLocation) 分发, 不在任何应用商店。
-  - Play 版: 包名 `dev.lerist.fakelocation`, Google Play 分发 (50K+ 安装)。
+  - Play 版: 包名 `dev.lerist.fakelocation`, Google Play 分发 (50K+ 安装, 截至 2026-11-05)。
 - 开发者: Lerist / 成都览一科技有限公司。
 - 已检查版本: 1.3.2.1 (versionCode 1579)、1.3.2.2 (1584)、1.3.2.3 (1585)、1.3.5 (1588)、1.3.5-beta (1593)、1.3.10 (1673) (以上为
   Play 构建)、1.5.0 (1700 官网/GitHub, 1701 Play)、1.5.2 (1702, 两构建), 均确认受影响。各通道出现的
@@ -175,7 +175,8 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
   - 通道二, Play 1.5.2 (su, root, 需打开续费页; 启动时的配置请求与版本检查仅 sh, 同通道一): `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = 8.3。
   - 通道二, 官网/GitHub 版与 Play 1.5.0 及更早 (su, root, 启动时配置请求/版本检查, 无需交互): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0。
   - 通道三 (su, root; 仅官网/GitHub 版, 需已激活 ROOT 模式, 激活后无需进一步交互): `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = 9.0。
-  - 整体 9.0 (Critical), 由官网/GitHub 版通道二、通道三达到。口径说明: 若视厂商本人为攻击者 (对其无门槛) 取 AC:L, 各通道更高。
+  - 整体 9.0 (Critical), 由官网/GitHub 版通道二、通道三达到; 其中通道二的启动路径已实测 (见 6), 故最高分
+    不依赖仅静态确认的通道三。口径说明: 若视厂商本人为攻击者 (对其无门槛) 取 AC:L, 各通道更高。
 - CVSS v4.0 按通道分别评 (官方计算器):
   - 通道一 (sh, 应用 uid): `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = 9.2。
   - 通道二, Play 1.5.2 (su, root, 续费页): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.0。
@@ -183,7 +184,7 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
   - 通道三 (su, root, 后台轮询): `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = 9.5。
   - 整体 9.5 (官网/GitHub 版通道二、通道三)。AT:P (通道二、三) 反映需已授予应用 root (通道三还需激活 ROOT 模式); SC/SI/SA:H
     反映越出应用取得 root (通道二、三), 通道一仅应用范围故取 N。通道三仅静态确认, 把 Exploit Maturity
-    设为 E:U 或 E:P 会降低其分数。
+    设为 E:U 或 E:P 会降低其分数。Play 1.5.2 通道二 (9.0) 低于通道一 (9.2), 是 AT:P 与 UI:P 扣分所致。
 
 ## 6. 概念验证
 
@@ -259,7 +260,8 @@ Pixel 9 (KernelSU)。
   (Lerist/FakeLocation) 已于 2026-08-20 被其归档。
 - 2026-11-06: 厂商回复称该 shell 接口本意用于控制盗版/破解版, 目前仅向这些版本下发一条长时间 sleep
   命令, 并称将在后续版本移除 su 的使用, 同时完善用户协议与隐私政策。上述说法未经独立验证, 且客户端代码
-  中并无将这些路径限定于盗版构建的限制 (依据第 4 节的分析)。
+  中并无将这些路径限定于盗版构建的限制 (依据第 4 节的分析)。厂商承诺的是移除 su 的使用, 未提及移除 shell
+  接口本身; 仅移除 su 时, 通道一及通道二、三的 sh 分支仍会以应用权限执行服务端下发的命令 (依据第 4 节)。
 - 2026-11-07: 修订本报告 (1.3)。受影响范围扩大到 1.3.2.1 至 1.5.2; 补充启动时配置请求和版本检查以 su
   执行、早于用户同意, 并附官网/GitHub 1.5.2 实测; 修正轮询频率、反篡改和签名等细节。
 
