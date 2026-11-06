@@ -1,6 +1,6 @@
 # FakeLocation: undocumented execution of server-supplied shell commands
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.3
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.5
 
 ## 1. Summary
 
@@ -340,6 +340,15 @@ these.
   earlier revisions (1.0-1.2) stated that versions 1.3.5-beta and earlier were not affected; that
   conclusion was incorrect — path 2 (the config endpoint `app/getAppConfigs`) is present from 1.3.2.1, the
   earliest version examined — and is corrected in this revision.
+- 2026-11-07: Report revised (1.4). Reframed the vendor's reply into what the vendor confirmed (the shell
+  interface exists and overuses su; su usage to be removed and the user agreement and privacy policy to be
+  improved) versus what it stated but is not independently verified (the pirated-build purpose and that only
+  a long sleep command is sent); added the reporter's follow-up questions and the erratum on revisions
+  1.0-1.2; condensed section 8 to a short note.
+- 2026-11-07: Report revised (1.5). Corrected the wording so the vendor's acknowledgment is not conflated
+  with the reporter's analysis: the vendor did not state that this functionality is undisclosed in the user
+  agreement; that neither the user agreement nor the privacy policy discloses it is the reporter's analysis
+  (section 4.4).
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
