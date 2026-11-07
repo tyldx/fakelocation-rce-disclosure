@@ -105,7 +105,7 @@ the vendor's response.
   malicious is a judgment of intent, so this report relies on observable facts and treats this class as
   secondary.
 
-## 4. Technical detail: three server-controlled RCE paths
+## 4. Technical detail: server-controlled command-execution paths
 
 Obfuscated names are from the decompilation of each version (the runtime-decrypted dex from 1.3.10 on,
 the APK itself for earlier versions). Play 1.5.2 names are
