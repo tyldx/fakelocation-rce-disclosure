@@ -22,3 +22,11 @@ Archived 2026-11-04/06. Shows that the vendor's public text does not disclose re
 | GitHub repository | github.com/Lerist/FakeLocation | https://archive.today/sTqGt | http://archive.today/2026.11.05-042358/https://github.com/Lerist/fakelocation |
 | GitHub release 1.5.2 | github.com/Lerist/FakeLocation/releases/tag/1.5.2 | https://archive.today/zABCC | http://archive.today/2026.11.05-042522/https://github.com/Lerist/FakeLocation/releases/tag/1.5.2 |
 | GitHub releases (1.5.0) | github.com/Lerist/FakeLocation/releases#release-1.5.0 | https://archive.today/7zd7w | http://archive.today/2026.11.05-042548/https://github.com/Lerist/FakeLocation/releases%23release-1.5.0 |
+
+## APKPure version list (screenshot, 2026-11-07)
+
+The page blocks archive.today with a bot check, so a screenshot is kept instead.
+
+| Page | Original URL | Evidence |
+|---|---|---|
+| Version list with listing dates | apkpure.com/cn/fake-location-mock-gps-route/dev.lerist.fakelocation/versions | `apkpure-versions-2026-11-07.png` |

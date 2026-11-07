@@ -38,7 +38,8 @@ root 身份运行。其中一条在启动时、用户同意首启条款之前即
   版本不同: 通道二 (配置接口 `app/getAppConfigs`) 在已检查的最早版本 1.3.2.1 中已存在; 通道一
   (getNotices) 在 1.3.5-beta (APKPure 收录于 2024-11-10) 与 1.3.10 (2025-10-31) 之间引入; 通道三仅见于官网/GitHub 版。
   1.3.2.1 是 APKPure 上可获取的最早版本, 更早版本无法获取;
-  1579-1702 区间内其余公开版本未逐一检查, 推定受影响。versionCode 非连续。
+  1579-1702 区间内其余公开版本未逐一检查, 推定受影响。versionCode 非连续。APKPure 收录日期见
+  `evidence/apkpure-versions-2026-11-07.png` (页面有人机验证, 无法存档)。
 - 签名证书: `b55e7f6ccb63318b2cc4d3c45e6b148131061a2acd0a82725fe59e118d1ddafc`
   (CN=Lerist., O=成都览一科技有限公司; 官网/GitHub 版全部, 及旧 Play <=1.3.5-beta);
   `d9ad7175f80ebed780b0c7c61b7c788827ad4d1953e0381feddd2fa0431f0362` (CN=Lerist., O=Lerist)。Play 版自

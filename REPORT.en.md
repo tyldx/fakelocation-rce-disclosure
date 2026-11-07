@@ -49,7 +49,8 @@ steals the key, which would expose every device running an affected version.
   is found only in the official-site/GitHub build. 1.3.2.1 is the earliest version available on APKPure;
   earlier versions could not be obtained; other public releases in the
   1579-1702 range were not individually examined and are presumed affected. versionCode values are not
-  consecutive.
+  consecutive. APKPure listing dates: `evidence/apkpure-versions-2026-11-07.png` (the page blocks archiving
+  with a bot check).
 - Signing certificates:
   `b55e7f6ccb63318b2cc4d3c45e6b148131061a2acd0a82725fe59e118d1ddafc`
   (CN=Lerist., O=Chengdu Lanyi Technology; all official-site/GitHub builds, and old Play <= 1.3.5-beta);
