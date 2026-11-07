@@ -339,7 +339,7 @@ these.
 - If an affected version was run on a root-granted device, treat the device as potentially having
   received commands, and assess accordingly (check for anomalies, reset if warranted).
 
-## 10. Disclosure timeline
+## 10. Related public records and disclosure timeline
 
 - 2025-02-28: A third party published related analysis of official-site 1.3.5 BETA on Zhihu (see 1.1 [1]).
 - 2026-07-14: A third party published related analysis of official-site/GitHub 1.5.0 on 52pojie (see 1.1 [2]).
