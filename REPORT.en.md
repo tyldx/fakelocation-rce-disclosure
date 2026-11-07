@@ -1,6 +1,6 @@
 # FakeLocation: execution of server-supplied shell commands not disclosed to users
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.1
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.2
 
 ## 1. Summary
 
