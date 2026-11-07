@@ -366,7 +366,10 @@ these.
 - 2026-11-05: Reported to CNCERT by email.
 - 2026-11-05: Vendor notified by email after publication and asked whether it will request a CVE ID. The
   report was published without prior coordinated disclosure because the affected code is present in
-  releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
+  releases signed with the vendor's certificate, the vendor's server can trigger the functionality, and
+  certificate pinning prevents third parties from using the published details to trigger the three HTTPS
+  paths. After publication, the reporter learned that the `code==10000` branch had been publicly analyzed
+  since 2026-07 (see 1.1), with no public vendor response or fix observed in that period.
   The vendor's GitHub repository (Lerist/FakeLocation) is archived; GitHub shows an archive date of
   2026-08-20, while a third party already described it as archived on 2026-07-14 (see 1.1 [2]), so it may
   have been archived more than once.
