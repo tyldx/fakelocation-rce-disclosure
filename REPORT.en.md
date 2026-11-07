@@ -55,8 +55,9 @@ discovery.
   and reports the branch corresponding to path 2 and its startup trigger.
 
 This report adds: path 1; live verification that paths 1 and 2 execute before user consent; the Play
-build; the version range 1.3.2.1 through 1.5.2; the certificate-pinning and trigger-party analysis; and
-the vendor's response.
+build; the version range 1.3.2.1 through 1.5.2; the certificate-pinning and trigger-party analysis;
+notification of the vendor, reports to platforms, and a CVE request (see section 10); and the vendor's
+response.
 
 ## 2. Affected product
 
