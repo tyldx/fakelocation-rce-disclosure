@@ -38,3 +38,4 @@ The page blocks archive.today with a bot check, so a screenshot is kept instead.
 | Zhihu article [1] | zhuanlan.zhihu.com/p/26927292194 | http://archive.today/dXwZ4 | http://archive.today/2026.11.07-070834/https://zhuanlan.zhihu.com/p/26927292194 |
 | 52pojie thread [2] | www.52pojie.cn/thread-2117178-1-1.html | http://archive.today/UAaES | http://archive.today/2026.11.07-070845/https://www.52pojie.cn/thread-2117178-1-1.html |
 | LINUX DO topic [3] | linux.do/t/topic/2847507 | not archived (archiving failed) | - |
+| Copy of [3] on locdd.com (same text, confirmed by the reporter) | www.locdd.com/t/topic/86985 | http://archive.today/tLlTl | http://archive.today/2026.11.07-072422/https://www.locdd.com/t/topic/86985 |

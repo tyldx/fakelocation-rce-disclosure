@@ -39,7 +39,8 @@ root 身份运行。其中一条在启动时、用户同意首启条款之前即
   https://www.52pojie.cn/thread-2117178-1-1.html (存档 https://archive.today/UAaES)。分析官网/GitHub 1.5.0, 报告了对应本报告通道二、三的
   `code==10000` 分支及构建到期机制。
 - [3] BlueFunny, 《Fake Location 1.5.2 高危后门分析》, LINUX DO, 2026-09-03,
-  https://linux.do/t/topic/2847507 。静态分析官网/GitHub 1.5.2, 报告了对应通道二的分支及其启动时触发。
+  https://linux.do/t/topic/2847507 (原帖未能存档; locdd.com 同文副本存档
+  https://archive.today/tLlTl)。静态分析官网/GitHub 1.5.2, 报告了对应通道二的分支及其启动时触发。
 
 本报告补充: 通道一; 通道一、二在用户同意前执行的实测; Play 构建; 1.3.2.1 至 1.5.2 的版本范围; 证书锁定与
 可触发方分析; 厂商回应。

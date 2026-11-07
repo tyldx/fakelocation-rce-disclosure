@@ -50,7 +50,8 @@ discovery.
   2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html (archive: https://archive.today/UAaES). Analyzes official-site/GitHub 1.5.0 and
   reports the `code==10000` branches corresponding to paths 2 and 3 here, and the build-expiry mechanism.
 - [3] BlueFunny, "Fake Location 1.5.2 高危后门分析" (Fake Location 1.5.2 high-risk backdoor analysis),
-  LINUX DO, 2026-09-03, https://linux.do/t/topic/2847507. Statically analyzes official-site/GitHub 1.5.2
+  LINUX DO, 2026-09-03, https://linux.do/t/topic/2847507 (original could not be archived;
+  archive of an identical copy on locdd.com: https://archive.today/tLlTl). Statically analyzes official-site/GitHub 1.5.2
   and reports the branch corresponding to path 2 and its startup trigger.
 
 This report adds: path 1; live verification that paths 1 and 2 execute before user consent; the Play
