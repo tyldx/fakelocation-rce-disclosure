@@ -1,6 +1,6 @@
 # FakeLocation: execution of server-supplied shell commands not disclosed to users
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.4
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.5
 
 ## 1. Summary
 
@@ -68,7 +68,10 @@ response.
 - Name: Fake Location (Google Play title "Fake Location - Mock GPS&Route").
 - Two builds:
   - Official-site / GitHub build: package `com.lerist.fakelocation` (code flavor = CN), distributed via
-    the official site fakeloc.cc/app and GitHub Releases (Lerist/FakeLocation); not on any app store.
+    the official site fakeloc.cc/app and GitHub Releases (Lerist/FakeLocation); not on any app store. The
+    GitHub channel was publicly inaccessible as of 2026-11-07; archives: repository
+    https://archive.today/sTqGt, 1.5.2 release https://archive.today/zABCC (others in
+    `evidence/archive-urls.md`).
   - Play build: package `dev.lerist.fakelocation`, distributed on Google Play (50K+ installs, as of 2026-11-05).
 - Developer: Lerist / Chengdu Lanyi Technology Co., Ltd. (成都览一科技有限公司).
 - Versions examined: 1.3.2.1 (versionCode 1579), 1.3.2.2 (1584), 1.3.2.3 (1585), 1.3.5 (1588), 1.3.5-beta (1593), 1.3.10 (1673) (all
@@ -419,6 +422,9 @@ these.
   data; added that path 1 can also obtain root once the app holds a root grant (inferred, not
   live-tested), so Play 1.5.2 can likewise run commands as root at startup with no interaction; adjusted
   the scoring notes and the assessment of the vendor's su-only removal accordingly.
+- 2026-11-07: The vendor's GitHub profile (Lerist) and repository (Lerist/FakeLocation) were observed to be
+  publicly inaccessible; GitHub's public API indicates the username still maps to an account that is
+  hidden from public view. The cause has not been confirmed by GitHub.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 

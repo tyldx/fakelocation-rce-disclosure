@@ -1,6 +1,6 @@
 # FakeLocation 在未向用户披露的情况下执行服务端下发的 shell 命令
 
-报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.6.4
+报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.6.5
 
 ## 1. 摘要
 
@@ -53,7 +53,9 @@ root 运行: 另一条以应用 uid 执行, 但下发的命令可自行调用 su
 - 名称: Fake Location (Google Play 名 "Fake Location - Mock GPS&Route")。
 - 两个构建:
   - 官网/GitHub 版: 包名 `com.lerist.fakelocation` (代码 flavor=CN), 经官网 fakeloc.cc/app 与
-    GitHub Releases (Lerist/FakeLocation) 分发, 不在任何应用商店。
+    GitHub Releases (Lerist/FakeLocation) 分发, 不在任何应用商店。GitHub 渠道截至 2026-11-07 已无法公开访问,
+    存档: 仓库 https://archive.today/sTqGt 、1.5.2 release https://archive.today/zABCC
+    (其余见 `evidence/archive-urls.md`)。
   - Play 版: 包名 `dev.lerist.fakelocation`, Google Play 分发 (50K+ 安装, 截至 2026-11-05)。
 - 开发者: Lerist / 成都览一科技有限公司。
 - 已检查版本: 1.3.2.1 (versionCode 1579)、1.3.2.2 (1584)、1.3.2.3 (1585)、1.3.5 (1588)、1.3.5-beta (1593)、1.3.10 (1673) (以上为
@@ -328,6 +330,8 @@ APK 完整性校验 (`C13595.m51176`) 不符时抛异常; 构建到期机制 (�
 - 2026-11-07: 修订本报告 (1.6.2、1.6.3)。写明同意前以 root 执行的前提是启动时应用已有 root 授权, 实测场景为
   清除数据后首次启动; 补充通道一在应用已获 root 授权时同样可取得 root (推断, 未实测), 故 Play 1.5.2 启动时亦
   可无交互地以 root 执行, 并相应调整评分说明与对厂商仅移除 su 方案的评估。
+- 2026-11-07: 观察到厂商 GitHub 账号 Lerist 的主页及仓库 Lerist/FakeLocation 已无法公开访问; 据 GitHub 公开
+  API 的返回, 该用户名仍对应一个账号, 但对外隐藏。原因未经 GitHub 确认。
 
 方法: 逆向与运行时内存导出, 仅用于安全披露。
 
