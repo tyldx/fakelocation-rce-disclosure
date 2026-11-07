@@ -1,6 +1,6 @@
 # FakeLocation 在未向用户披露的情况下执行服务端下发的 shell 命令
 
-报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.6.3
+报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.6.4
 
 ## 1. 摘要
 
@@ -135,7 +135,8 @@ if (code == 10000 && !TextUtils.isEmpty(message)) {
 中无条件发出, 与通道一的 getNotices 位于同一函数 (官网/GitHub 版 `MainActivity.C11127.m44656`), 即与
 通道一同时、早于用户同意。异步变体的执行方式因构建而异:
 
-- Play 1.5.2 (`C3685.AbstractC3687.m13609`, 回调 `C5946`): 对 `code==10000` 仅执行 sh, 以应用 uid 运行。
+- Play 1.5.2 (`C3685.AbstractC3687.m13609`, 回调 `C5946`): 对 `code==10000` 仅执行 sh, 以应用 uid 运行
+  (应用已获 root 授权时, 经 sh 执行的命令可自行调用 su; 推断, 未实测, 见第 5 节)。
 - 官网/GitHub 版 (`C5901.AbstractC5903.mo959`, 回调 `C11075`) 及 Play 1.5.0 和更早版本 (如 1.5.0
   `C4606.AbstractC4608`): 与同步回调相同, su 与 sh 各执行一次, 即启动时无需交互即可以 root 执行。
 

@@ -1,6 +1,6 @@
 # FakeLocation: execution of server-supplied shell commands not disclosed to users
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.3
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.4
 
 ## 1. Summary
 
@@ -165,7 +165,9 @@ That request is sent unconditionally from `MainActivity.onCreate`, in the same f
 getNotices (official-site/GitHub build `MainActivity.C11127.m44656`), i.e. together with path 1 and
 before user consent. How the asynchronous variant executes depends on the build:
 
-- Play 1.5.2 (`C3685.AbstractC3687.m13609`, callback `C5946`): runs sh only on `code==10000`, as the app uid.
+- Play 1.5.2 (`C3685.AbstractC3687.m13609`, callback `C5946`): runs sh only on `code==10000`, as the app uid
+  (commands run through sh can themselves invoke su where root has been granted to the app; inferred, not
+  live-tested; see section 5).
 - Official-site/GitHub build (`C5901.AbstractC5903.mo959`, callback `C11075`) and Play 1.5.0 and earlier
   (e.g. 1.5.0 `C4606.AbstractC4608`): same as the synchronous callback, running the command once via su
   and once via sh, so it runs as root at startup with no interaction.
