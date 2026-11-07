@@ -289,7 +289,7 @@ reply.
 Local self-protection (official-site/GitHub build only): an anti-tamper routine (`RunnableC13526`) may
 soft-reboot or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
 mismatch; and a build-expiry mechanism (build timestamp + 200 days; 1.5.2 expires 2027-03-08, 1.5.0
-expired 2026-10-26) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
+expired 2026-10-27, both UTC+8) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
 these.
 
 ## 9. User remediation
