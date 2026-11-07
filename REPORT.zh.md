@@ -1,6 +1,6 @@
 # FakeLocation 未公开执行服务端下发的 shell 命令
 
-报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.5
+报告人: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · 修订版 1.6
 
 ## 1. 摘要
 

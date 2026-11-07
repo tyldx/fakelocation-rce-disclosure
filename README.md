@@ -13,8 +13,9 @@ Reporter: [tyldx](https://github.com/tyldx) · contact tyldx@proton.me
 
 - `REPORT.en.md` / `REPORT.zh.md` — the full report (English / Chinese). PDF copies are not tracked in
   this repository; generate them on demand from the Markdown with `tools/md2html.py`.
-- `poc/` — dynamic verification. `xposed-rce-poc/` is the LSPosed PoC module source (hooks only the
-  okhttp response and rewrites it by URL to trigger the app's own command-execution branches); `results/` holds
+- `poc/` — dynamic verification. `xposed-rce-poc/` is the baseline LSPosed PoC module source (rewrites
+  okhttp responses locally by URL to trigger the app's own command-execution branches; the variant used
+  for the version-check runs is not included, see report section 6); `results/` holds
   the `id` command outputs and other evidence.
 - `hashes/` — sample SHA-256 values.
 - `tools/` — `md2html.py` renders a report to HTML, which is then printed to the PDF.
