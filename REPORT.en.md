@@ -259,14 +259,15 @@ Pixel 9 (KernelSU).
 
 Path 1 also ran before consent: on a fresh install the command executed while the first-run consent
 dialog was still on screen and the user had not tapped "Agree", with no interaction (per the experiment notes,
-uiautomator showed the "Agree" button present and untapped, topResumedActivity=MainActivity; raw UI and
-input records were not preserved). The version check on
+uiautomator showed the "Agree" button present and untapped, topResumedActivity=MainActivity; no raw UI or
+input records were found). The version check on
 official-site/GitHub 1.5.2 was tested separately: root output occurred while the consent dialog was
-on screen, with an app-uid sh output recorded in a separate run (see `poc/results/cn_checkapkupdate_preconsent_root.txt`,
+on screen (dialog state shown by screenshot; raw UI records were not preserved); a separate run recorded
+both root and app-uid sh output (see `poc/results/cn_checkapkupdate_preconsent_root.txt`,
 `cn_checkapkupdate_consent_screen.png`, and `cn_checkapkupdate_su_sh_proof.txt`). The config request
 `getAppConfigs` was not tested separately; its su+sh branch remains supported by static analysis.
-The published PoC module source lacks the version-check rewrite branch; the module used in that
-experiment was not preserved.
+For the version-check runs, a matching rewrite branch was temporarily added to the baseline module and
+reverted afterwards; that variant's source was not kept, and the published `poc/` source is the baseline.
 Path 3 (poller) was not
 live-driven: its thread starts only once the app's ROOT mode is activated (which also triggers the
 app's own injection and anti-tamper), so it was left undriven to avoid side effects.

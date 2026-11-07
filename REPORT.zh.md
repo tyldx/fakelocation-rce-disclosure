@@ -208,11 +208,13 @@ Pixel 9 (KernelSU)。
 | 官网/GitHub 1.5.2 | 三 (su) | 未触发 | 与通道二同一命令出口、同一 `code==10000` 机制 | 仅静态 |
 
 通道一亦在同意前执行: 首装态下命令于首次同意框仍在屏、用户尚未点击"同意"时执行, 无需交互
-(据实验记录: uiautomator 显示"同意"按钮在屏且未点击, topResumedActivity=MainActivity; 原始 UI 与输入记录未保存)。官网/GitHub 1.5.2 的版本检查
-已单独实测: 同意框仍在屏时产生 root 输出, 另一轮记录中有应用 uid 的 sh 输出 (见
+(据实验记录: uiautomator 显示"同意"按钮在屏且未点击, topResumedActivity=MainActivity; 未找到原始 UI 与输入记录)。官网/GitHub 1.5.2 的版本检查
+已单独实测: 同意框仍在屏时产生 root 输出 (同意框状态依据截图, 原始 UI 记录未保存);
+另一轮实验同时记录了 root 与应用 uid 的 sh 输出 (见
 `poc/results/cn_checkapkupdate_preconsent_root.txt`、`cn_checkapkupdate_consent_screen.png`、
 `cn_checkapkupdate_su_sh_proof.txt`)。配置请求 `getAppConfigs` 未单独实测, 其 su+sh 分支仍据静态分析。
-公开的 PoC 模块源码不含版本检查的改写分支, 该实验所用模块未能保留。
+版本检查实验在基线模块上临时增加了对应的改写分支, 实验后已回退, 该变体源码未保留; 公开的 `poc/` 源码为
+基线版本。
 通道三 (轮询) 未实测驱动:
 其线程需激活应用 ROOT 模式才启动 (会连带触发应用自身的注入与反篡改), 为避副作用未驱动。
 
