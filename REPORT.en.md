@@ -32,7 +32,7 @@ decompiled directly from the APK. Certificate pinning prevents an arbitrary netw
 three HTTPS paths by man-in-the-middle (based on static analysis); the parties able to trigger them are the
 developer, who runs the server and holds its private key, and anyone who compromises that server or
 steals the key, which would expose every device running an affected version.
-The plaintext system_server-side connection described in section 8 is outside this limit: in 1.3.2.1 through 1.3.5-beta its injected module also contains a command-execution branch, and a third party can forge server messages (see section 8).
+The plaintext system_server-side connection described in 4.5 is outside this limit: in 1.3.2.1 through 1.3.5-beta its injected module also contains a command-execution branch, and a third party can forge server messages (see 4.5).
 The `code==10000` branches of paths 2 and 3 had been publicly analyzed before this report (see 1.1).
 
 ### 1.1 Related work
@@ -44,8 +44,8 @@ discovery.
 - [1] 二师兄, "安卓逆向 —— Fake Location 授权分析以及后门分析" (Android reverse
   engineering: Fake Location licensing and backdoor analysis), Zhihu, 2025-02-28,
   https://zhuanlan.zhihu.com/p/26927292194. Analyzes licensing and injection in official-site 1.3.5 BETA,
-  corresponding to the system_server-side connection in section 8; its claim that this connection can
-  execute server-sent commands was verified by this report: it exists in the injected module of 1.3.2.1 through 1.3.5-beta and is absent from official-site 1.5.2 (see section 8).
+  corresponding to the system_server-side connection in 4.5; its claim that this connection can
+  execute server-sent commands was verified by this report: it exists in the injected module of 1.3.2.1 through 1.3.5-beta and is absent from official-site 1.5.2 (see 4.5).
 - [2] AkiyamaMIO123, "FakeLocation 1.5.0 后门分析" (FakeLocation 1.5.0 backdoor analysis), 52pojie,
   2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html. Analyzes official-site/GitHub 1.5.0 and
   reports the `code==10000` branches corresponding to paths 2 and 3 here, and the build-expiry mechanism.
@@ -234,6 +234,12 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   terms of use https://archive.today/MyhhH (2026-11-04); download page https://archive.today/ZMnTg
   (2026-11-04).
 
+### 4.5 System_server-side connection (static analysis only, 1.3.2.1 through 1.3.5-beta)
+
+- 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta Play builds (samples taken from APKPure): the injected module is present and this connection has a branch that runs server-sent commands as the system_server process; the connection has no transport protection and its application-layer key ships with the client, so a third party can forge server messages.
+- Official-site/GitHub 1.5.2: the connection only stops or continues mocking and has no execution branch; a third party can forge such messages, with impact limited to stopping mocking.
+- 1.3.10, 1.5.0 (official-site and Play), Play 1.5.2: the module's code was not obtained; undetermined.
+
 ## 5. Impact and scoring
 
 - Any party able to make these endpoints return the above directives can run arbitrary shell commands
@@ -244,7 +250,7 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   poller) stops; paths 1 and 2 are unaffected.
 - Because of certificate pinning and because the server's private key is not in the app, an arbitrary
   third party cannot trigger these three HTTPS paths via a network man-in-the-middle (based on static
-  analysis; the system_server-side connection in section 8 is outside this conclusion, and on 1.3.2.1 through 1.3.5-beta a third party can trigger command execution through it). The
+  analysis; the system_server-side connection in 4.5 is outside this conclusion, and on 1.3.2.1 through 1.3.5-beta a third party can trigger command execution through it). The
   parties who can trigger it are: the developer (holding the server private key and running the server),
   or anyone who compromises Lerist's server or steals its server private key. This functionality is
   therefore controllable by the developer and also creates a supply-chain single point of failure: a
@@ -325,11 +331,7 @@ Server-controlled: a remote-kill branch (account-sync callback, official-site/Gi
 `141.164.37.97` after 1 hour) and stops mocking on a `NOPASS.` reply, or when a connection fails more than 24 hours after the last
 successful connection and no `pass.` has been received.
 
-System_server-side connection by version (static analysis):
-
-- 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta (Play builds): the injected module is present and this connection has a branch that runs server-sent commands as the system_server process; the connection has no transport protection and its application-layer key ships with the client, so a third party can forge server messages.
-- Official-site/GitHub 1.5.2: the connection only stops or continues mocking and has no execution branch; a third party can forge such messages, with impact limited to stopping mocking.
-- 1.3.10, 1.5.0 (official-site and Play), Play 1.5.2: the module's code was not obtained; undetermined.
+The per-version status of the system_server-side connection is given in 4.5.
 
 Local self-protection (official-site/GitHub build only): an anti-tamper routine (`RunnableC13526`) may
 soft-reboot, reboot the device, or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
