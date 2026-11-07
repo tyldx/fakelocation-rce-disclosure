@@ -1,4 +1,4 @@
-# FakeLocation: undocumented execution of server-supplied shell commands
+# FakeLocation: execution of server-supplied shell commands not disclosed to users
 
 Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6
 
@@ -29,9 +29,32 @@ runs through `su` on every build examined except Play 1.5.2 (the version check o
 From 1.3.10 on, the code exists only in a runtime-decrypted dex and is concealed with packing, string
 encryption, and split command strings; the earlier versions examined are not packed, and the code can be
 decompiled directly from the APK. Certificate pinning prevents an arbitrary network attacker from triggering these
-paths by man-in-the-middle (based on static analysis); the parties able to trigger them are the
+three HTTPS paths by man-in-the-middle (based on static analysis); the parties able to trigger them are the
 developer, who runs the server and holds its private key, and anyone who compromises that server or
 steals the key, which would expose every device running an affected version.
+The `code==10000` branches of paths 2 and 3 had been publicly analyzed before this report (see 1.1).
+
+### 1.1 Related work
+
+The following public analyses predate this report. Its conclusions rest on the listed samples, static
+analysis, and runtime verification, independently of these sources, and it makes no claim of first
+discovery.
+
+- [1] 二师兄 (byline to be confirmed), "安卓逆向 —— Fake Location 授权分析以及后门分析" (Android reverse
+  engineering: Fake Location licensing and backdoor analysis), Zhihu, date to be added,
+  https://zhuanlan.zhihu.com/p/26927292194. Analyzes licensing and injection in official-site 1.3.5 BETA,
+  corresponding to the system_server-side connection in section 8; its claim that this connection can
+  execute server-sent commands has not been verified by this report.
+- [2] AkiyamaMIO123, "FakeLocation 1.5.0 后门分析" (FakeLocation 1.5.0 backdoor analysis), 52pojie,
+  2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html. Analyzes official-site/GitHub 1.5.0 and
+  reports the `code==10000` branches corresponding to paths 2 and 3 here, and the build-expiry mechanism.
+- [3] BlueFunny, "Fake Location 1.5.2 高危后门分析" (Fake Location 1.5.2 high-risk backdoor analysis),
+  LINUX DO, 2026-09-03, https://linux.do/t/topic/2847507. Statically analyzes official-site/GitHub 1.5.2
+  and reports the branch corresponding to path 2 and its startup trigger.
+
+This report adds: path 1; live verification that paths 1 and 2 execute before user consent; the Play
+build; the version range 1.3.2.1 through 1.5.2; the certificate-pinning and trigger-party analysis; and
+the vendor's response.
 
 ## 2. Affected product
 
@@ -63,7 +86,7 @@ steals the key, which would expose every device running an affected version.
   |---|---|---|---|---|---|
   | 1.3.2.1 | 1579 | Play (apkpure) | yes (earliest examined, path 2) | apkpure_1.3.2.1.apk | `ed860aaf7dd52bce0873ba96d6f7e5aa263ce71ee68b8758bbade4f19cd1148a` |
   | 1.3.5-beta | 1593 | Play (apkpure) | yes (path 2; no path 1 yet) | apkpure_1.3.5-beta.xapk | `fd569fe0a89e3b733ca02c84862c997da442d1bb05fd7329d2d0954d1ce6594f` |
-  | 1.3.10 | 1673 | Play (apkpure) | yes (path 1 first appears) | apkpure_1.3.10.xapk | `eb625139e9f55e0627516c52d651a58f0b9b5bbbe3e5f0d71960c3136c42b135` |
+  | 1.3.10 | 1673 | Play (apkpure) | yes (first examined sample with path 1) | apkpure_1.3.10.xapk | `eb625139e9f55e0627516c52d651a58f0b9b5bbbe3e5f0d71960c3136c42b135` |
   | 1.5.0 | 1700 | Official-site/GitHub (CN) | yes | github CN 1.5.0 apk | `7b78f2e9c0f06fdd7f44379f241cd2959f476f6958bb1bb215ebcd796651cd4b` |
   | 1.5.2 | 1702 | Official-site/GitHub (CN) | yes | single apk (site == GitHub) | `5d2a2bad585e3d50c38621a002bcf7a8e0dcf5448fc045f58619fe7a491eaea1` |
   | 1.5.2 | 1702 | Play | yes | base.apk (app bundle) | `a4fa13cd318d6ad392bd6033a93e40bac5ac1eff90b65d7c526033aa8f679d24` |
@@ -187,9 +210,11 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   1.3.2.1 (named `transparent.png` / `translucent.png` before 1.3.10), so the conclusion in section 5 on
   who can trigger these paths applies to all affected versions. When these stores load, the business
   client installs a `HostnameVerifier` that always returns true, skipping hostname matching; certificate
-  trust validation still applies, so this is only a latent weakness.
+  trust validation still applies, so a third party holding a public-CA-issued certificate cannot use it
+  to inject responses either; this is only a latent weakness.
 - Concealment: from 1.3.10 on, the business code exists only in a runtime-decrypted dex
-  (official-site/GitHub build: 360 packer; Play build: a custom loader), invisible when unpacking the APK
+  (official-site/GitHub 1.5.0: 360 packer; 1.5.2 shows no 360 packer
+  traces and uses a different packer; Play build: a custom loader), invisible when unpacking the APK
   directly (the earlier versions examined are not packed); strings are
   XOR-encrypted; sensitive commands are split and concatenated; no logging, exceptions swallowed.
 - Not authorized: neither the privacy policy, the user agreement, nor the terms disclose remote command
@@ -217,7 +242,8 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   request, version check) also fires at startup and runs through su. After the build-expiry mechanism (see 8), path 3 (the
   poller) stops; paths 1 and 2 are unaffected.
 - Because of certificate pinning and because the server's private key is not in the app, an arbitrary
-  third party cannot trigger this via a network man-in-the-middle (based on static analysis). The
+  third party cannot trigger these three HTTPS paths via a network man-in-the-middle (based on static
+  analysis; the system_server-side connection in section 8 is outside this conclusion). The
   parties who can trigger it are: the developer (holding the server private key and running the server),
   or anyone who compromises Lerist's server or steals its server private key. This functionality is
   therefore controllable by the developer and also creates a supply-chain single point of failure: a
@@ -286,7 +312,7 @@ cracked versions, which has not been independently verified.
 - Per-version class map is above; the full decompilation and the vendor APKs are not redistributed here
   (vendor copyright). Samples are identified by the SHA-256 hashes in section 2.
 
-## 8. Other undisclosed behavior (corroborating, non-core)
+## 8. Other behavior not disclosed to users (corroborating, non-core)
 
 These are peripheral observations listed for completeness; they are not part of the core finding and are
 not required to establish it.
@@ -300,8 +326,8 @@ successful connection and no `pass.` has been received.
 
 Local self-protection (official-site/GitHub build only): an anti-tamper routine (`RunnableC13526`) may
 soft-reboot, reboot the device, or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
-mismatch; and a build-expiry mechanism (build timestamp + 200 days; 1.5.2 expires 2027-03-08, 1.5.0
-expired 2026-10-27, both UTC+8) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
+mismatch; and a build-expiry mechanism (build timestamp + 200 days; 1.5.2 expires 2027-03-08 (UTC+8), 1.5.0
+expired in late October 2026) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
 these.
 
 ## 9. User remediation
@@ -315,15 +341,19 @@ these.
 
 ## 10. Disclosure timeline
 
+- 2026-07-14: A third party published related analysis of official-site/GitHub 1.5.0 on 52pojie (see 1.1 [2]).
+- 2026-09-03: A third party published related analysis of official-site/GitHub 1.5.2 on LINUX DO (see 1.1 [3]).
 - 2026-11-05: CVE requested from MITRE.
 - 2026-11-05: Report published; reported to Google Play (policy against downloading or executing
-  server-controlled code) and GitHub (a release distributing a binary with this undisclosed code).
+  server-controlled code) and GitHub (a release distributing a binary with this functionality undisclosed to users).
 - 2026-11-05: Also reported to Google through the Android Security Malware Report Form.
 - 2026-11-05: Reported to CNCERT by email.
 - 2026-11-05: Vendor notified by email after publication and asked whether it will request a CVE ID. The
   report was published without prior coordinated disclosure because the affected code is present in
   releases signed with the vendor's certificate and the vendor's server can trigger the functionality.
-  The vendor's GitHub repository (Lerist/FakeLocation) had been archived by its owner on 2026-08-20.
+  The vendor's GitHub repository (Lerist/FakeLocation) is archived; GitHub shows an archive date of
+  2026-08-20, while a third party already described it as archived on 2026-07-14 (see 1.1 [2]), so it may
+  have been archived more than once.
 - 2026-11-06: Vendor replied. Acknowledged (vendor's confirmed position): the shell interface exists and
   overuses the su permission; and stated that su usage will be removed in an upcoming version and that the
   user agreement and privacy policy will be improved. The reporter's analysis (section 4.4) is that neither

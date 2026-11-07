@@ -24,7 +24,7 @@ Reporter: [tyldx](https://github.com/tyldx) · contact tyldx@proton.me
 ## Not included
 
 The vendor's APKs and the decompiled vendor code are not redistributed here (copyright, and the binaries
-contain the undisclosed code). Samples are referenced by hash and the original pages by archive link.
+contain functionality undisclosed to users). Samples are referenced by hash and the original pages by archive link.
 
 ## Boundary
 

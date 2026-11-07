@@ -3,7 +3,7 @@
 [English](README.md)
 
 对 Android 应用 FakeLocation (包名 `com.lerist.fakelocation` / `dev.lerist.fakelocation`,
-开发者 Lerist / 成都览一科技) 的安全分析:应用含未公开的服务端可控命令执行功能,通用回调路径可达 root,
+开发者 Lerist / 成都览一科技) 的安全分析:应用含未向用户披露的服务端可控命令执行功能,通用回调路径可达 root,
 且在应用启动时、用户同意之前即可触发。受影响版本为 1.3.2.1 至 1.5.2。
 
 报告人: [tyldx](https://github.com/tyldx) · 联系 tyldx@proton.me
@@ -20,7 +20,7 @@
 
 ## 不包含
 
-不重分发厂商 APK 与反编译出的厂商代码(受版权保护、且为含未公开代码的二进制)。
+不重分发厂商 APK 与反编译出的厂商代码(受版权保护、且为含未向用户披露功能的二进制)。
 样本以哈希引用,原始页面以存档链接引用。
 
 ## 边界
