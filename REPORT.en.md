@@ -23,8 +23,10 @@ returns a body starting with `10000:` or a wrapped response with `code == 10000`
 arbitrary command at app privilege; two of the three paths run it through `su`, i.e. as root only when
 the app has already been granted root. One path fires at startup, before the user accepts the first-run
 consent dialog (verified); another fires through the startup config request and version check, and
-runs through `su` on every build examined except Play 1.5.2 (the version check on official-site/GitHub
-1.5.2 was verified before consent; the config request remains static-confirmed only). Neither the privacy policy nor the user agreement discloses this capability.
+runs through `su` on every build examined except Play 1.5.2: for users who have granted root, it runs as
+root on every launch with no interaction; running as root before consent likewise requires root to have
+been granted earlier (the version check on official-site/GitHub 1.5.2 was verified before consent on the
+first launch after clearing app data; the config request remains static-confirmed only). Neither the privacy policy nor the user agreement discloses this capability.
 
 From 1.3.10 on, the code exists only in a runtime-decrypted dex and is concealed with packing, string
 encryption, and split command strings; the earlier versions examined are not packed, and the code can be
@@ -134,7 +136,7 @@ if (s.startsWith("10000:")) {
 
 Endpoint `POST https://notice.api.fakeloc.cc:4430/Notice/getNotices`, requested during the app's
 startup loading. Its response is evaluated for `startsWith("10000:")` as soon as it arrives,
-independently of the first-run consent flow. Verified in the PoC (see 6): on a fresh install the command
+independently of the first-run consent flow. Verified in the PoC (see 6): on the first launch after clearing app data (`pm clear`) the command
 executed while the first-run consent dialog was still displayed and the user had not tapped "Agree",
 with no interaction; the behavior is also outside the scope of what the user consents to (see 4.4).
 Execution reads no output, writes no log, and swallows exceptions.
@@ -252,7 +254,9 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   on devices with an affected version installed; paths 2 and 3 run as root when the app holds root (the
   app's ROOT mode requires the user to grant root). Path 1 fires automatically at startup, before the
   user accepts any terms, with no interaction; on every build examined except Play 1.5.2, path 2 (config
-  request, version check) also fires at startup and runs through su. After the build-expiry mechanism (see 8), path 3 (the
+  request, version check) also fires at startup and runs through su, so for users who have granted root
+  it runs as root on every launch with no interaction; running as root before consent requires root to
+  have been granted earlier (a genuinely fresh install has no root grant yet). After the build-expiry mechanism (see 8), path 3 (the
   poller) stops; paths 1 and 2 are unaffected.
 - Because of certificate pinning and because the server's private key is not in the app, an arbitrary
   third party cannot trigger these three HTTPS paths via a network man-in-the-middle (based on static
@@ -296,12 +300,13 @@ Pixel 9 (KernelSU).
 | Official-site/GitHub 1.5.2 | 2 (su+sh) | `version/checkApkUpdate` rewritten to `code==10000` before consent | `uid=0(root) ... u:r:ksu:s0`; sh as `uid=10355(u0_a355)` | Live |
 | Official-site/GitHub 1.5.2 | 3 (su) | not triggered | shares the command sink and `code==10000` mechanism with path 2 | Static only |
 
-Path 1 also ran before consent: on a fresh install the command executed while the first-run consent
+Path 1 also ran before consent: on the first launch after clearing app data (`pm clear`), the command executed while the first-run consent
 dialog was still on screen and the user had not tapped "Agree", with no interaction (per the experiment notes,
 uiautomator showed the "Agree" button present and untapped, topResumedActivity=MainActivity; no raw UI or
 input records were found). The version check on
 official-site/GitHub 1.5.2 was tested separately: root output occurred while the consent dialog was
-on screen (dialog state shown by screenshot; raw UI records were not preserved); a separate run recorded
+on screen (the device had already granted the app root, which `pm clear` does not revoke; dialog state
+shown by screenshot; raw UI records were not preserved); a separate run recorded
 both root and app-uid sh output (see `poc/results/cn_checkapkupdate_preconsent_root.txt`,
 `cn_checkapkupdate_consent_screen.png`, and `cn_checkapkupdate_su_sh_proof.txt`). The config request
 `getAppConfigs` was not tested separately; its su+sh branch remains supported by static analysis.
