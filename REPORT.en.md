@@ -40,8 +40,8 @@ The following public analyses predate this report. Its conclusions rest on the l
 analysis, and runtime verification, independently of these sources, and it makes no claim of first
 discovery.
 
-- [1] 二师兄 (byline to be confirmed), "安卓逆向 —— Fake Location 授权分析以及后门分析" (Android reverse
-  engineering: Fake Location licensing and backdoor analysis), Zhihu, date to be added,
+- [1] 二师兄, "安卓逆向 —— Fake Location 授权分析以及后门分析" (Android reverse
+  engineering: Fake Location licensing and backdoor analysis), Zhihu, 2025-02-28,
   https://zhuanlan.zhihu.com/p/26927292194. Analyzes licensing and injection in official-site 1.3.5 BETA,
   corresponding to the system_server-side connection in section 8; its claim that this connection can
   execute server-sent commands has not been verified by this report.
@@ -341,6 +341,7 @@ these.
 
 ## 10. Disclosure timeline
 
+- 2025-02-28: A third party published related analysis of official-site 1.3.5 BETA on Zhihu (see 1.1 [1]).
 - 2026-07-14: A third party published related analysis of official-site/GitHub 1.5.0 on 52pojie (see 1.1 [2]).
 - 2026-09-03: A third party published related analysis of official-site/GitHub 1.5.2 on LINUX DO (see 1.1 [3]).
 - 2026-11-05: CVE requested from MITRE.
@@ -375,6 +376,8 @@ these.
   earlier revisions (1.0-1.2) stated that versions 1.3.5-beta and earlier were not affected; that
   conclusion was incorrect — path 2 (the config endpoint `app/getAppConfigs`) is present from 1.3.2.1, the
   earliest version examined — and is corrected in this revision.
+- 2026-11-07: Report revised (1.6). Added section 1.1 on related work (the reporter learned of these
+  analyses after the initial publication) and corrected several details following review.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
