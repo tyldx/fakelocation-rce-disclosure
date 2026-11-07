@@ -1,6 +1,6 @@
 # FakeLocation: execution of server-supplied shell commands not disclosed to users
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.1
 
 ## 1. Summary
 
@@ -32,7 +32,7 @@ decompiled directly from the APK. Certificate pinning prevents an arbitrary netw
 three HTTPS paths by man-in-the-middle (based on static analysis); the parties able to trigger them are the
 developer, who runs the server and holds its private key, and anyone who compromises that server or
 steals the key, which would expose every device running an affected version.
-The plaintext system_server-side connection described in 4.5 is outside this limit: in 1.3.2.1 through 1.3.5-beta its injected module also contains a command-execution branch, and a third party can forge server messages (see 4.5).
+The system_server-side connection described in 4.5 is outside this conclusion.
 The `code==10000` branches of paths 2 and 3 had been publicly analyzed before this report (see 1.1).
 
 ### 1.1 Related work
@@ -45,7 +45,7 @@ discovery.
   engineering: Fake Location licensing and backdoor analysis), Zhihu, 2025-02-28,
   https://zhuanlan.zhihu.com/p/26927292194 (archive: https://archive.today/dXwZ4). Analyzes licensing and injection in official-site 1.3.5 BETA,
   corresponding to the system_server-side connection in 4.5; its claim that this connection can
-  execute server-sent commands was verified by this report: it exists in the injected module of 1.3.2.1 through 1.3.5-beta and is absent from official-site 1.5.2 (see 4.5).
+  execute server-sent commands has not been verified by this report (see 4.5).
 - [2] AkiyamaMIO123, "FakeLocation 1.5.0 后门分析" (FakeLocation 1.5.0 backdoor analysis), 52pojie,
   2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html (archive: https://archive.today/UAaES). Analyzes official-site/GitHub 1.5.0 and
   reports the `code==10000` branches corresponding to paths 2 and 3 here, and the build-expiry mechanism.
@@ -235,9 +235,13 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   terms of use https://archive.today/MyhhH (2026-11-04); download page https://archive.today/ZMnTg
   (2026-11-04).
 
-### 4.5 System_server-side connection (static analysis only, 1.3.2.1 through 1.3.5-beta)
+### 4.5 System_server-side connection (static analysis only)
 
-- 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta Play builds (samples taken from APKPure): the injected module is present and this connection has a branch that runs server-sent commands as the system_server process; the connection has no transport protection and its application-layer key ships with the client, so a third party can forge server messages.
+- 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta Play builds (samples taken from APKPure): the injected
+  module is present and runs in system_server. The Zhihu article [1] states that older versions can run
+  server-sent commands over this connection; the injected code is loaded at runtime and is not in this
+  report's materials, so neither that statement nor whether a third party can forge messages can be
+  confirmed.
 - Official-site/GitHub 1.5.2: the connection only stops or continues mocking and has no execution branch; a third party can forge such messages, with impact limited to stopping mocking.
 - 1.3.10, 1.5.0 (official-site and Play), Play 1.5.2: the module's code was not obtained; undetermined.
 
@@ -251,7 +255,7 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   poller) stops; paths 1 and 2 are unaffected.
 - Because of certificate pinning and because the server's private key is not in the app, an arbitrary
   third party cannot trigger these three HTTPS paths via a network man-in-the-middle (based on static
-  analysis; the system_server-side connection in 4.5 is outside this conclusion, and on 1.3.2.1 through 1.3.5-beta a third party can trigger command execution through it). The
+  analysis; the system_server-side connection in 4.5 is outside this conclusion). The
   parties who can trigger it are: the developer (holding the server private key and running the server),
   or anyone who compromises Lerist's server or steals its server private key. This functionality is
   therefore controllable by the developer and also creates a supply-chain single point of failure: a
@@ -266,11 +270,9 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   | 2 — su/root, Play 1.5.2 (renewal page opened; startup config/version-check are sh only) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
   | 2 — su/root, official-site/GitHub & Play ≤1.5.0 (startup, no interaction) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
   | 3 — su/root, official-site/GitHub only (ROOT mode activated; background poll) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
-  | 4.5 — system_server-side connection, 1.3.2.1 through 1.3.5-beta (third-party triggerable; static only) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
 
   Overall **9.0 (v3.1) / 9.5 (v4.0)**, Critical, reached by path 2 and path 3 on the official-site/GitHub
-  build and by section 4.5. For 4.5, `AC:H` (v3.1) / `AT:P` (v4.0) mean the attacker must be on the
-  network path; the connection has no certificate pinning, so v4.0 uses `AC:L`. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
+  build. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
   path 1 stays app-scoped (`S:U` / `SC:SI:SA:N`). Path 2's startup route is live-tested (see 6), so the top
   score does not depend on the static-only path 3 (setting Exploit Maturity `E:U`/`E:P` lowers path 3). If
   the vendor itself is the attacker (no precondition), `AC:L` raises each score.
@@ -390,6 +392,9 @@ these.
   earliest version examined — and is corrected in this revision.
 - 2026-11-07: Report revised (1.6). Added section 1.1 on related work (the reporter learned of these
   analyses after the initial publication) and corrected several details following review.
+- 2026-11-07: Report revised (1.6.1). Withdrew the two 1.6 conclusions on older versions in section 4.5
+  and their score: the relevant code is not in this report's materials and could not be independently
+  confirmed.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
