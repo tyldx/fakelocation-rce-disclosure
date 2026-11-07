@@ -173,15 +173,19 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
 
 ### 4.4 Transport and concealment
 
-- Servers `*.api.fakeloc.cc:4430`, backup `*.lerist.dev`; DNS over HTTPS.
+- Servers: business `api.fakeloc.cc:4430`, notices `notice.api.fakeloc.cc:4430`, ads `ads.api.fakeloc.cc:4430`;
+  on connection failure the client falls back to matching hosts under `lerist.dev`. DNS goes through two
+  Alibaba DoH endpoints plus 8.8.8.8 and 1.1.1.1 (UDP/53), falling back to system DNS on errors. Same in
+  both builds.
 - Mutual TLS pinned to a Lerist self-signed server certificate (`xp0.m10346`, BKS, password hardcoded;
   value redacted in the public version). The trust store `tp.png` pins the server cert (fingerprint
   `60:5C:2B...`; its private key is NOT in the app); the client keystore `tl.png` holds the client
   private key (fingerprint `F1:11:05...`, usable only to impersonate a client). `tp.png` is byte-identical
   across both builds, and the same trust store is byte-identical back to the earliest version examined,
   1.3.2.1 (named `transparent.png` / `translucent.png` before 1.3.10), so the conclusion in section 5 on
-  who can trigger these paths applies to all affected versions. The hostname verifier (`HostnameVerifier.verify`) always returns true, a latent
-  weakness.
+  who can trigger these paths applies to all affected versions. When these stores load, the business
+  client installs a `HostnameVerifier` that always returns true, skipping hostname matching; certificate
+  trust validation still applies, so this is only a latent weakness.
 - Concealment: from 1.3.10 on, the business code exists only in a runtime-decrypted dex
   (official-site/GitHub build: 360 packer; Play build: a custom loader), invisible when unpacking the APK
   directly (the earlier versions examined are not packed); strings are
