@@ -43,11 +43,11 @@ discovery.
 
 - [1] 二师兄, "安卓逆向 —— Fake Location 授权分析以及后门分析" (Android reverse
   engineering: Fake Location licensing and backdoor analysis), Zhihu, 2025-02-28,
-  https://zhuanlan.zhihu.com/p/26927292194. Analyzes licensing and injection in official-site 1.3.5 BETA,
+  https://zhuanlan.zhihu.com/p/26927292194 (archive: https://archive.today/dXwZ4). Analyzes licensing and injection in official-site 1.3.5 BETA,
   corresponding to the system_server-side connection in 4.5; its claim that this connection can
   execute server-sent commands was verified by this report: it exists in the injected module of 1.3.2.1 through 1.3.5-beta and is absent from official-site 1.5.2 (see 4.5).
 - [2] AkiyamaMIO123, "FakeLocation 1.5.0 后门分析" (FakeLocation 1.5.0 backdoor analysis), 52pojie,
-  2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html. Analyzes official-site/GitHub 1.5.0 and
+  2026-07-14, https://www.52pojie.cn/thread-2117178-1-1.html (archive: https://archive.today/UAaES). Analyzes official-site/GitHub 1.5.0 and
   reports the `code==10000` branches corresponding to paths 2 and 3 here, and the build-expiry mechanism.
 - [3] BlueFunny, "Fake Location 1.5.2 高危后门分析" (Fake Location 1.5.2 high-risk backdoor analysis),
   LINUX DO, 2026-09-03, https://linux.do/t/topic/2847507. Statically analyzes official-site/GitHub 1.5.2

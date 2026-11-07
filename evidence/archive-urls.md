@@ -30,3 +30,11 @@ The page blocks archive.today with a bot check, so a screenshot is kept instead.
 | Page | Original URL | Evidence |
 |---|---|---|
 | Version list with listing dates | apkpure.com/cn/fake-location-mock-gps-route/dev.lerist.fakelocation/versions | `apkpure-versions-2026-11-07.png` |
+
+## Prior public analyses cited in section 1.1 (archive.today, 2026-11-07)
+
+| Page | Original URL | Archive short link | Archive timestamp link |
+|---|---|---|---|
+| Zhihu article [1] | zhuanlan.zhihu.com/p/26927292194 | http://archive.today/dXwZ4 | http://archive.today/2026.11.07-070834/https://zhuanlan.zhihu.com/p/26927292194 |
+| 52pojie thread [2] | www.52pojie.cn/thread-2117178-1-1.html | http://archive.today/UAaES | http://archive.today/2026.11.07-070845/https://www.52pojie.cn/thread-2117178-1-1.html |
+| LINUX DO topic [3] | linux.do/t/topic/2847507 | not archived (archiving failed) | - |

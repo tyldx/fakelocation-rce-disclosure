@@ -33,10 +33,10 @@ root 身份运行。其中一条在启动时、用户同意首启条款之前即
 发现。
 
 - [1] 二师兄, 《安卓逆向 —— Fake Location 授权分析以及后门分析》, 知乎, 2025-02-28,
-  https://zhuanlan.zhihu.com/p/26927292194 。分析官网 1.3.5 BETA 的授权校验与注入机制, 对应本报告 4.5 的
+  https://zhuanlan.zhihu.com/p/26927292194 (存档 https://archive.today/dXwZ4)。分析官网 1.3.5 BETA 的授权校验与注入机制, 对应本报告 4.5 的
   system_server 侧连接; 其所称经该连接执行服务端命令的能力, 经本报告核实: 在 1.3.2.1 至 1.3.5-beta 的注入模块中存在, 官网 1.5.2 已无 (详见 4.5)。
 - [2] AkiyamaMIO123, 《FakeLocation 1.5.0 后门分析》, 吾爱破解, 2026-07-14,
-  https://www.52pojie.cn/thread-2117178-1-1.html 。分析官网/GitHub 1.5.0, 报告了对应本报告通道二、三的
+  https://www.52pojie.cn/thread-2117178-1-1.html (存档 https://archive.today/UAaES)。分析官网/GitHub 1.5.0, 报告了对应本报告通道二、三的
   `code==10000` 分支及构建到期机制。
 - [3] BlueFunny, 《Fake Location 1.5.2 高危后门分析》, LINUX DO, 2026-09-03,
   https://linux.do/t/topic/2847507 。静态分析官网/GitHub 1.5.2, 报告了对应通道二的分支及其启动时触发。
