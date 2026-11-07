@@ -213,8 +213,10 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
   | 二 — su/root, Play 1.5.2 (需打开续费页; 启动时配置请求/版本检查仅 sh) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
   | 二 — su/root, 官网/GitHub 版与 Play ≤1.5.0 (启动时, 无需交互) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
   | 三 — su/root, 仅官网/GitHub 版 (需激活 ROOT 模式; 后台轮询) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+  | 4.5 — system_server 侧连接, 1.3.2.1 至 1.3.5-beta (第三方可触发; 仅静态) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
 
-  整体 **9.0 (v3.1) / 9.5 (v4.0)**, Critical, 由官网/GitHub 版通道二、通道三达到。通道二、三的 `S:C` /
+  整体 **9.0 (v3.1) / 9.5 (v4.0)**, Critical, 由官网/GitHub 版通道二、通道三及 4.5 达到。4.5 的 `AC:H`
+  (v3.1) / `AT:P` (v4.0) 表示攻击者需处于通信链路上; 该连接无证书锁定, 故 v4.0 取 `AC:L`。通道二、三的 `S:C` /
   `SC:SI:SA:H` 与 `AT:P` 反映授予 root 后越出应用取得 root; 通道一仅应用范围 (`S:U` / `SC:SI:SA:N`)。通道二
   的启动路径已实测 (见 6), 故最高分不依赖仅静态确认的通道三 (把 Exploit Maturity 设为 `E:U`/`E:P` 会降低
   通道三)。若视厂商本人为攻击者 (对其无门槛) 取 `AC:L`, 各分值更高。

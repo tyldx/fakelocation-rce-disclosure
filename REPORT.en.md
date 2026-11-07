@@ -265,9 +265,11 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   | 2 — su/root, Play 1.5.2 (renewal page opened; startup config/version-check are sh only) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
   | 2 — su/root, official-site/GitHub & Play ≤1.5.0 (startup, no interaction) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
   | 3 — su/root, official-site/GitHub only (ROOT mode activated; background poll) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+  | 4.5 — system_server-side connection, 1.3.2.1 through 1.3.5-beta (third-party triggerable; static only) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
 
   Overall **9.0 (v3.1) / 9.5 (v4.0)**, Critical, reached by path 2 and path 3 on the official-site/GitHub
-  build. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
+  build and by section 4.5. For 4.5, `AC:H` (v3.1) / `AT:P` (v4.0) mean the attacker must be on the
+  network path; the connection has no certificate pinning, so v4.0 uses `AC:L`. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
   path 1 stays app-scoped (`S:U` / `SC:SI:SA:N`). Path 2's startup route is live-tested (see 6), so the top
   score does not depend on the static-only path 3 (setting Exploit Maturity `E:U`/`E:P` lowers path 3). If
   the vendor itself is the attacker (no precondition), `AC:L` raises each score.
