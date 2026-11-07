@@ -149,7 +149,7 @@ The config endpoint `app/getAppConfigs` also uses the asynchronous variant (offi
 `C3440.m14629`, callback `C3445`; Play `C3071.m12188`, callback `C3076`), executing as described above
 for each build. It is requested from `Application.onCreate` (main process only) via `lv0.m5558` (Play
 `hj2.m2797`), before any Activity and before the consent flow; its only precondition is a native
-integrity check (`SwipeUtils.isQualified`, which a genuine install passes). On failure or `code==10000`
+integrity check (`SwipeUtils.isQualified`). On failure or `code==10000`
 it also retries after 5 seconds. Its 10000 branch exists in the earliest versions examined: the config
 callbacks of 1.3.2.1, 1.3.2.2, 1.3.2.3, 1.3.5, 1.3.5-beta, and 1.3.10 (e.g. 1.3.5-beta `C3301`, 1.3.10 `C2360`) run the
 command once via su and once via sh on `code==10000`, and are likewise requested from
@@ -180,7 +180,8 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   both builds.
 - Mutual TLS pinned to a Lerist self-signed server certificate (`xp0.m10346`, BKS, password hardcoded;
   value redacted in the public version). The trust store `tp.png` pins the server cert (fingerprint
-  `60:5C:2B...`; its private key is NOT in the app); the client keystore `tl.png` holds the client
+  `60:5C:2B...`; its private key is NOT in the app; it is the store's only, self-signed entry, and system
+  trust anchors are not merged in, checked on CN 1.5.2); the client keystore `tl.png` holds the client
   private key (fingerprint `F1:11:05...`, usable only to impersonate a client). `tp.png` is byte-identical
   across both builds, and the same trust store is byte-identical back to the earliest version examined,
   1.3.2.1 (named `transparent.png` / `translucent.png` before 1.3.10), so the conclusion in section 5 on
@@ -240,9 +241,11 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
 
 ## 6. Proof of concept
 
-Method: an LSPosed module hooks only `okhttp3.internal.http.RealInterceptorChain.proceed` and rewrites
-the response body by request URL, triggering the app's own command-execution branches. It does not
-contact the vendor's server and does not modify the app; the injected command is only `id`. Test device
+Method: an LSPosed module hooks `BaseDexClassLoader` constructors to locate the decrypted OkHttp classes,
+then hooks `okhttp3.internal.http.RealInterceptorChain.proceed` and, after the original response returns,
+rewrites the response body by request URL, triggering the app's own command-execution branches. The
+original request is still sent; neither the vendor's server nor the app is modified; payloads use only
+`id` (including `id -u`) and output redirection. Test device
 Pixel 9 (KernelSU).
 
 | Build | Path | Trigger | Key output | Verified |
@@ -255,12 +258,15 @@ Pixel 9 (KernelSU).
 | Official-site/GitHub 1.5.2 | 3 (su) | not triggered | shares the command sink and `code==10000` mechanism with path 2 | Static only |
 
 Path 1 also ran before consent: on a fresh install the command executed while the first-run consent
-dialog was still on screen and the user had not tapped "Agree", with no interaction (uiautomator showed
-the "Agree" button present and untapped, topResumedActivity=MainActivity). The version check on
+dialog was still on screen and the user had not tapped "Agree", with no interaction (per the experiment notes,
+uiautomator showed the "Agree" button present and untapped, topResumedActivity=MainActivity; raw UI and
+input records were not preserved). The version check on
 official-site/GitHub 1.5.2 was tested separately: root output occurred while the consent dialog was
-on screen, with a separate app-uid sh output (see `poc/results/cn_checkapkupdate_preconsent_root.txt`,
+on screen, with an app-uid sh output recorded in a separate run (see `poc/results/cn_checkapkupdate_preconsent_root.txt`,
 `cn_checkapkupdate_consent_screen.png`, and `cn_checkapkupdate_su_sh_proof.txt`). The config request
 `getAppConfigs` was not tested separately; its su+sh branch remains supported by static analysis.
+The published PoC module source lacks the version-check rewrite branch; the module used in that
+experiment was not preserved.
 Path 3 (poller) was not
 live-driven: its thread starts only once the app's ROOT mode is activated (which also triggers the
 app's own injection and anti-tamper), so it was left undriven to avoid side effects.
@@ -286,13 +292,13 @@ not required to establish it.
 
 Server-controlled: a remote-kill branch (account-sync callback, official-site/GitHub build `ba2`) runs
 `kill -9 <own pid>` then `System.exit(0)` on `code == 9999`; and a dex injected into system_server
-(`C0084`/`C0036`, official-site/GitHub build, not confirmed for Play) opens a non-TLS TCP connection to
+(`C0084`/`C0036`, official-site/GitHub build, not confirmed for Play) opens a non-TLS TCP connection (with application-layer encryption) to
 `vef.api.fakeloc.cc:12309` (falling back to `vef.fl.api.lerist.dev` after 30 minutes, then hardcoded IP
-`141.164.37.97` after 1 hour) and stops mocking on a `NOPASS.` reply or after 24 hours without a `pass.`
-reply.
+`141.164.37.97` after 1 hour) and stops mocking on a `NOPASS.` reply, or when a connection fails more than 24 hours after the last
+successful connection and no `pass.` has been received.
 
 Local self-protection (official-site/GitHub build only): an anti-tamper routine (`RunnableC13526`) may
-soft-reboot or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
+soft-reboot, reboot the device, or exit on a files-directory hash mismatch; an APK-integrity check (`C13595.m51176`) throws on
 mismatch; and a build-expiry mechanism (build timestamp + 200 days; 1.5.2 expires 2027-03-08, 1.5.0
 expired 2026-10-27, both UTC+8) stops path 3, injection, and init after expiry. Paths 1 and 2 are not gated by any of
 these.

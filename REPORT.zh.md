@@ -123,7 +123,7 @@ if (code == 10000 && !TextUtils.isEmpty(message)) {
 配置接口 `app/getAppConfigs` 同样走异步回调变体 (官网/GitHub 版 `C3440.m14629`, 回调 `C3445`; Play 版
 `C3071.m12188`, 回调 `C3076`), 执行方式随构建同上。它由 `Application.onCreate` (仅主进程) 经
 `lv0.m5558` (Play 版 `hj2.m2797`) 发起, 早于任何 Activity 与同意流程; 唯一前置条件是一项 native 完整性
-校验 (`SwipeUtils.isQualified`, 正版应用可通过)。失败或 `code==10000` 时同样 5 秒后重试。该接口的
+校验 (`SwipeUtils.isQualified`)。失败或 `code==10000` 时同样 5 秒后重试。该接口的
 10000 分支在已检查的最早版本中即已存在: 1.3.2.1、1.3.2.2、1.3.2.3、1.3.5、1.3.5-beta、1.3.10 的配置回调 (如 1.3.5-beta
 `C3301`、1.3.10 `C2360`) 在 `code==10000` 时经 su 与 sh 各执行一次, 同样在 `Application.onCreate` 中
 请求。
@@ -148,7 +148,8 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
   连接失败时改用 `lerist.dev` 下对应的备用域名。DNS 经两个阿里 DoH 端点与 8.8.8.8、1.1.1.1 (UDP/53)
   解析, 异常时回退系统 DNS。两构建相同。
 - 双向 TLS, 证书锁定到 Lerist 自签服务端证书 (`xp0.m10346`, BKS, 口令写死在代码; 公开版略去具体值)。
-  信任库 `tp.png` 锁定服务端证书 (指纹 `60:5C:2B...`, 私钥不在应用内); 客户端证书 `tl.png` 含客户端
+  信任库 `tp.png` 锁定服务端证书 (指纹 `60:5C:2B...`, 私钥不在应用内; 库内仅此一张自签证书,
+  不合并系统信任库, 已核对 CN 1.5.2); 客户端证书 `tl.png` 含客户端
   私钥 (指纹 `F1:11:05...`, 仅能冒充客户端)。两构建 `tp.png` 字节相同, 且同一信任库自已检查的最早版本 1.3.2.1 起
   字节相同 (1.3.10 之前文件名为 `transparent.png` / `translucent.png`), 故第 5 节的可触发方结论适用于
   全部受影响版本。上述信任库加载成功时,
@@ -192,8 +193,9 @@ C13588.m51168(new String[]{message}, /*su=*/false, true);  // sh
 
 ## 6. 概念验证
 
-方法: LSPosed 模块仅 hook `okhttp3.internal.http.RealInterceptorChain.proceed`, 按请求 URL 改写
-响应体, 触发应用自身的命令执行分支。不接触厂商服务器、不修改应用文件, 注入命令仅为 `id`。实测环境
+方法: LSPosed 模块 hook `BaseDexClassLoader` 构造函数以定位解密后的 OkHttp 类, 再 hook
+`okhttp3.internal.http.RealInterceptorChain.proceed`, 在原响应返回后按请求 URL 改写响应体, 触发应用自身的
+命令执行分支。原请求照常发出, 不修改厂商服务器与应用文件; 注入命令只用 `id` (含 `id -u`) 与输出重定向。实测环境
 Pixel 9 (KernelSU)。
 
 | 构建 | 通道 | 触发方式 | 关键输出 | 验证 |
@@ -206,10 +208,11 @@ Pixel 9 (KernelSU)。
 | 官网/GitHub 1.5.2 | 三 (su) | 未触发 | 与通道二同一命令出口、同一 `code==10000` 机制 | 仅静态 |
 
 通道一亦在同意前执行: 首装态下命令于首次同意框仍在屏、用户尚未点击"同意"时执行, 无需交互
-(uiautomator 显示"同意"按钮在屏且未点击, topResumedActivity=MainActivity)。官网/GitHub 1.5.2 的版本检查
-已单独实测: 同意框仍在屏时产生 root 输出, 另有应用 uid 的 sh 输出 (见
+(据实验记录: uiautomator 显示"同意"按钮在屏且未点击, topResumedActivity=MainActivity; 原始 UI 与输入记录未保存)。官网/GitHub 1.5.2 的版本检查
+已单独实测: 同意框仍在屏时产生 root 输出, 另一轮记录中有应用 uid 的 sh 输出 (见
 `poc/results/cn_checkapkupdate_preconsent_root.txt`、`cn_checkapkupdate_consent_screen.png`、
 `cn_checkapkupdate_su_sh_proof.txt`)。配置请求 `getAppConfigs` 未单独实测, 其 su+sh 分支仍据静态分析。
+公开的 PoC 模块源码不含版本检查的改写分支, 该实验所用模块未能保留。
 通道三 (轮询) 未实测驱动:
 其线程需激活应用 ROOT 模式才启动 (会连带触发应用自身的注入与反篡改), 为避副作用未驱动。
 
@@ -229,10 +232,11 @@ sleep 命令, 此说法未经独立验证。
 
 服务端可控: 远程终止分支 (账号同步回调, 官网/GitHub 版 `ba2`) 对 `code == 9999` 执行 `kill -9 <自身 pid>`
 后 `System.exit(0)`; 注入 system_server 的 dex (`C0084`/`C0036`, 官网/GitHub 版, Play 版未确认) 以
-不带 TLS 的 TCP 连接 `vef.api.fakeloc.cc:12309` (断连 30 分钟后改连 `vef.fl.api.lerist.dev`, 1 小时后改
-连写死 IP `141.164.37.97`), 回 `NOPASS.` 或 24 小时未收到 `pass.` 即停止模拟。
+不带 TLS (应用层另有加密) 的 TCP 连接 `vef.api.fakeloc.cc:12309` (断连 30 分钟后改连 `vef.fl.api.lerist.dev`, 1 小时后改
+连写死 IP `141.164.37.97`), 收到 `NOPASS.` 即停止模拟; 连接失败且距上次连接成功超过 24 小时、
+从未收到 `pass.` 时也停止。
 
-本地自保护 (仅官网/GitHub 版): 反篡改机制 (`RunnableC13526`) 在 files 目录哈希不符时可能软重启或退出;
+本地自保护 (仅官网/GitHub 版): 反篡改机制 (`RunnableC13526`) 在 files 目录哈希不符时可能软重启、重启设备或退出;
 APK 完整性校验 (`C13595.m51176`) 不符时抛异常; 构建到期机制 (构建时间戳 + 200 天; 1.5.2 到期
 2027-03-08, 1.5.0 已于 2026-10-27 到期, 均为 UTC+8) 到期后停止通道三、注入与初始化。通道一、二不受上述任一机制限制。
 
