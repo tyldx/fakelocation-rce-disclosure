@@ -1,6 +1,6 @@
 # FakeLocation: execution of server-supplied shell commands not disclosed to users
 
-Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.2
+Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · revision 1.6.3
 
 ## 1. Summary
 
@@ -20,12 +20,14 @@ the affected builds the
 client parses and executes shell commands embedded in the responses of
 specific API endpoints, without user approval. Three such server-controlled paths exist. If the server
 returns a body starting with `10000:` or a wrapped response with `code == 10000`, the app executes an
-arbitrary command at app privilege; two of the three paths run it through `su`, i.e. as root only when
-the app has already been granted root. One path fires at startup, before the user accepts the first-run
-consent dialog (verified); another fires through the startup config request and version check, and
-runs through `su` on every build examined except Play 1.5.2: for users who have granted root, it runs as
-root on every launch with no interaction; running as root before consent likewise requires the app to hold
-a root grant at launch (the version check on official-site/GitHub 1.5.2 was verified before consent on the
+arbitrary command; in two of the three paths the app's own code runs it through `su`. Once the app holds
+a root grant, all three paths can run as root: the remaining path runs as the app uid, but the delivered
+command can call su itself (inferred from root managers granting by app uid; not live-tested). One path
+fires at startup, before the user accepts the first-run consent dialog (verified); another fires through
+the startup config request and version check, and runs through `su` on every build examined except Play
+1.5.2. For users who have granted root, every build can therefore run commands as root on every launch
+with no interaction; running as root before consent requires the app to hold a root grant at launch (the
+version check on official-site/GitHub 1.5.2 was verified before consent on the
 first launch after clearing app data; the config request remains static-confirmed only). Neither the privacy policy nor the user agreement discloses this capability.
 
 From 1.3.10 on, the code exists only in a runtime-decrypted dex and is concealed with packing, string
@@ -252,10 +254,12 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
 
 - Any party able to make these endpoints return the above directives can run arbitrary shell commands
   on devices with an affected version installed; paths 2 and 3 run as root when the app holds root (the
-  app's ROOT mode requires the user to grant root). Path 1 fires automatically at startup, before the
+  app's ROOT mode requires the user to grant root), and commands delivered via path 1 can call su
+  themselves to obtain root (inferred; not live-tested). Path 1 fires automatically at startup, before the
   user accepts any terms, with no interaction; on every build examined except Play 1.5.2, path 2 (config
-  request, version check) also fires at startup and runs through su, so for users who have granted root
-  it runs as root on every launch with no interaction; running as root before consent requires the app
+  request, version check) also fires at startup and runs through su; together with path 1, every build,
+  Play 1.5.2 included, can run commands as root on every launch with no interaction for users who have
+  granted root; running as root before consent requires the app
   to hold a root grant at launch (e.g. granted earlier and not revoked, or pre-granted in a root manager
   before first launch). After the build-expiry mechanism (see 8), path 3 (the
   poller) stops; paths 1 and 2 are unaffected.
@@ -272,14 +276,15 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
 
   | Path (variant) | CVSS v3.1 | CVSS v4.0 |
   |---|---|---|
-  | 1 — sh, app uid | `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = **8.1** | `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = **9.2** |
-  | 2 — su/root, Play 1.5.2 (renewal page opened; startup config/version-check are sh only) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
+  | 1 — sh, app uid (no root grant) | `AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H` = **8.1** | `CVSS:4.0/AV:N/AC:H/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` = **9.2** |
+  | 1 — root granted (command calls su itself; inferred, not live-tested) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
+  | 2 — su/root, Play 1.5.2 (renewal page opened; startup config/version-check are sh only, startup root via path 1) | `AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:H` = **8.3** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:P/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.0** |
   | 2 — su/root, official-site/GitHub & Play ≤1.5.0 (startup, no interaction) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
   | 3 — su/root, official-site/GitHub only (ROOT mode activated; background poll) | `AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H` = **9.0** | `CVSS:4.0/AV:N/AC:H/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H` = **9.5** |
 
   Overall **9.0 (v3.1) / 9.5 (v4.0)**, Critical, reached by path 2 and path 3 on the official-site/GitHub
-  build. The `S:C` / `SC:SI:SA:H` and `AT:P` on paths 2/3 reflect escape to root once root is granted;
-  path 1 stays app-scoped (`S:U` / `SC:SI:SA:N`). Path 2's startup route is live-tested (see 6), so the top
+  build and by path 1 when root is granted. `S:C` / `SC:SI:SA:H` and `AT:P` reflect escape to root once
+  root is granted; without a root grant path 1 stays app-scoped (`S:U` / `SC:SI:SA:N`). Path 2's startup route is live-tested (see 6), so the top
   score does not depend on the static-only path 3 (setting Exploit Maturity `E:U`/`E:P` lowers path 3). If
   the vendor itself is the attacker (no precondition), `AC:L` raises each score.
 
@@ -389,7 +394,9 @@ these.
   and the client cannot verify any server-side targeting, so the targeting claim cannot be confirmed from
   the client (based on the analysis in section 4). The vendor's stated commitment concerns removing su
   usage and does not mention removing the shell interface itself; with su removed alone, path 1 and the sh
-  branches of paths 2 and 3 would still execute server-supplied commands at app privilege (based on section 4).
+  branches of paths 2 and 3 would still execute server-supplied commands; as long as the app keeps a root
+  grant, those commands can call su themselves to obtain root (inferred; not live-tested), so removing su
+  from the app's code alone does not eliminate root-level execution (based on section 4).
 - 2026-11-06: Reporter followed up by email, asking the vendor to confirm: (1) whether the upcoming
   version removes server-supplied shell execution entirely or only su; (2) which version will contain the
   fix and when it will be released; (3) whether the vendor will request a CVE ID from the MITRE CNA of Last
@@ -405,6 +412,11 @@ these.
 - 2026-11-07: Report revised (1.6.1). Withdrew the two 1.6 conclusions on older versions in section 4.5
   and their score: the relevant code is not in this report's materials and could not be independently
   confirmed.
+- 2026-11-07: Report revised (1.6.2, 1.6.3). Stated that running as root before consent requires the app
+  to hold a root grant at launch, with the live test performed on the first launch after clearing app
+  data; added that path 1 can also obtain root once the app holds a root grant (inferred, not
+  live-tested), so Play 1.5.2 can likewise run commands as root at startup with no interaction; adjusted
+  the scoring notes and the assessment of the vendor's su-only removal accordingly.
 
 Method: reverse engineering and runtime memory dumping, for security disclosure only.
 
