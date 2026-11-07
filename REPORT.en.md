@@ -24,8 +24,8 @@ arbitrary command at app privilege; two of the three paths run it through `su`, 
 the app has already been granted root. One path fires at startup, before the user accepts the first-run
 consent dialog (verified); another fires through the startup config request and version check, and
 runs through `su` on every build examined except Play 1.5.2: for users who have granted root, it runs as
-root on every launch with no interaction; running as root before consent likewise requires root to have
-been granted earlier (the version check on official-site/GitHub 1.5.2 was verified before consent on the
+root on every launch with no interaction; running as root before consent likewise requires the app to hold
+a root grant at launch (the version check on official-site/GitHub 1.5.2 was verified before consent on the
 first launch after clearing app data; the config request remains static-confirmed only). Neither the privacy policy nor the user agreement discloses this capability.
 
 From 1.3.10 on, the code exists only in a runtime-decrypted dex and is concealed with packing, string
@@ -255,8 +255,9 @@ command instead of a list, it can have one executed every 2 to 7 minutes. Not pr
   app's ROOT mode requires the user to grant root). Path 1 fires automatically at startup, before the
   user accepts any terms, with no interaction; on every build examined except Play 1.5.2, path 2 (config
   request, version check) also fires at startup and runs through su, so for users who have granted root
-  it runs as root on every launch with no interaction; running as root before consent requires root to
-  have been granted earlier (a genuinely fresh install has no root grant yet). After the build-expiry mechanism (see 8), path 3 (the
+  it runs as root on every launch with no interaction; running as root before consent requires the app
+  to hold a root grant at launch (e.g. granted earlier and not revoked, or pre-granted in a root manager
+  before first launch). After the build-expiry mechanism (see 8), path 3 (the
   poller) stops; paths 1 and 2 are unaffected.
 - Because of certificate pinning and because the server's private key is not in the app, an arbitrary
   third party cannot trigger these three HTTPS paths via a network man-in-the-middle (based on static
