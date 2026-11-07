@@ -45,7 +45,7 @@ steals the key, which would expose every device running an affected version.
   Play builds), 1.5.0 (1700 official-site/GitHub, 1701 Play), and 1.5.2 (1702, both builds), all
   confirmed affected. The paths appear in different versions: path 2 (config endpoint
   `app/getAppConfigs`) is already present in the earliest version examined, 1.3.2.1; path 1
-  (getNotices) was introduced between 1.3.5-beta and 1.3.10 (listed on APKPure on 2025-10-31); path 3
+  (getNotices) was introduced between 1.3.5-beta (listed on APKPure on 2024-11-10) and 1.3.10 (2025-10-31); path 3
   is found only in the official-site/GitHub build. 1.3.2.1 is the earliest version available on APKPure;
   earlier versions could not be obtained; other public releases in the
   1579-1702 range were not individually examined and are presumed affected. versionCode values are not
