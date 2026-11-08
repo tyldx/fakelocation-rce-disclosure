@@ -26,17 +26,15 @@ command can call su itself (inferred from root managers granting by app uid; not
 fires at startup, before the user accepts the first-run consent dialog (verified); another fires through
 the startup config request and version check, and runs through `su` on every build examined except Play
 1.5.2. For users who have granted root, every build can therefore run commands as root on every launch
-with no interaction; running as root before consent requires the app to hold a root grant at launch (the
-version check on official-site/GitHub 1.5.2 was verified before consent on the
-first launch after clearing app data; the config request remains static-confirmed only). Neither the privacy policy nor the user agreement discloses this capability.
+with no interaction; running as root before consent requires the app to hold a root grant at launch (test
+setup and evidence in sections 5 and 6). Neither the privacy policy nor the user agreement discloses this capability.
 
 From 1.3.10 on, the code exists only in a runtime-decrypted dex and is concealed with packing, string
 encryption, and split command strings; the earlier versions examined are not packed, and the code can be
 decompiled directly from the APK. Certificate pinning prevents an arbitrary network attacker from triggering these
-three HTTPS paths by man-in-the-middle (based on static analysis); the parties able to trigger them are the
-developer, who runs the server and holds its private key, and anyone who compromises that server or
-steals the key, which would expose every device running an affected version.
-The system_server-side connection described in 4.5 is outside this conclusion.
+three HTTPS paths by man-in-the-middle; the only parties able to trigger them are the developer (who runs
+the server and holds its private key) and anyone who compromises that server or steals the key, detailed in
+section 5 (the system_server-side connection described in 4.5 is outside this conclusion).
 The `code==10000` branches of paths 2 and 3 had been publicly analyzed before this report (see 1.1).
 
 ### 1.1 Related work
@@ -330,8 +328,8 @@ app's own injection and anti-tamper), so it was left undriven to avoid side effe
 Boundary: this is a client-side demonstration (the response is injected locally), proving the client
 executes server-controlled commands; it does not prove the vendor's server currently sends them. The
 primary evidence is the static code branches in section 4. The vendor has acknowledged that this
-interface exists; it further states that it currently sends only a long sleep command to pirated or
-cracked versions, which has not been independently verified.
+interface exists (its claim that it currently sends only a long sleep command to pirated or cracked
+versions has not been independently verified; see section 10).
 
 ## 7. Reproduction and forensics
 
