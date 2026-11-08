@@ -2,6 +2,8 @@
 
 [中文版 / Chinese](README.zh.md)
 
+Full report: [English](REPORT.en.md) | [中文](REPORT.zh.md)
+
 Security analysis of the Android app FakeLocation (packages `com.lerist.fakelocation` /
 `dev.lerist.fakelocation`, developer Lerist / Chengdu Lanyi Technology): the app contains an
 undocumented, server-controlled command execution capability; the generic-callback path can run as root,
@@ -11,15 +13,15 @@ Reporter: [tyldx](https://github.com/tyldx) · contact tyldx@proton.me
 
 ## Contents
 
-- `REPORT.en.md` / `REPORT.zh.md` — the full report (English / Chinese). PDF copies are not tracked in
-  this repository; generate them on demand from the Markdown with `tools/md2html.py`.
-- `poc/` — dynamic verification. `xposed-rce-poc/` is the baseline LSPosed PoC module source (rewrites
+- [`REPORT.en.md`](REPORT.en.md) / [`REPORT.zh.md`](REPORT.zh.md): the full report (English / Chinese). PDF copies are not tracked in
+  this repository; generate them on demand from the Markdown with [`tools/md2html.py`](tools/md2html.py).
+- [`poc/`](poc/): dynamic verification. [`xposed-rce-poc/`](poc/xposed-rce-poc/) is the baseline LSPosed PoC module source (rewrites
   okhttp responses locally by URL to trigger the app's own command-execution branches; the variant used
-  for the version-check runs is not included, see report section 6); `results/` holds
+  for the version-check runs is not included, see report section 6); [`results/`](poc/results/) holds
   the `id` command outputs and other evidence.
-- `hashes/` — sample SHA-256 values.
-- `tools/` — `md2html.py` renders a report to HTML, which is then printed to the PDF.
-- `evidence/archive-urls.md` — archive.today links for the official site, policy pages, store, and repo.
+- [`hashes/`](hashes/): sample SHA-256 values.
+- [`tools/`](tools/): [`md2html.py`](tools/md2html.py) renders a report to HTML, which is then printed to the PDF.
+- [`evidence/archive-urls.md`](evidence/archive-urls.md): archive.today links for the official site, policy pages, store, and repo.
 
 ## Not included
 
