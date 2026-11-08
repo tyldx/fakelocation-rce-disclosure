@@ -31,6 +31,15 @@ The page blocks archive.today with a bot check, so a screenshot is kept instead.
 |---|---|---|
 | Version list with listing dates | apkpure.com/cn/fake-location-mock-gps-route/dev.lerist.fakelocation/versions | `apkpure-versions-2026-11-07.png` |
 
+## GitHub release 1.3.1.6 (Wayback Machine)
+
+The release page lazy-loads its assets, so the snapshot has no APK filename; the APK capture shows it.
+
+| Page | Capture (UTC) | Shows | Archive link |
+|---|---|---|---|
+| GitHub releases | 2022-11-22 04:22:25 | 1.3.1.6 marked Latest, dated 2022-08-23T20:44:42Z (2022-08-24 UTC+8) | https://web.archive.org/web/20221122042225/https://github.com/Lerist/FakeLocation/releases |
+| APK release asset | 2023-02-02 11:38:29 | `FakeLocation_CN_v1.3.1.6_1569_20220824071825.apk`, 21,910,897 bytes, last-modified 2022-08-23 23:31:39 UTC | https://web.archive.org/web/20230202113829if_/https://objects.githubusercontent.com/github-production-release-asset-2e65be/183682229/48281334-bc88-4a9e-8dde-438a2b8039eb?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20230202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230202T113829Z&X-Amz-Expires=300&X-Amz-Signature=fe0d62d2c9f2aa40361998222c148c7d6d56f602cb788b32467a180a6e3b3f78&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=183682229&response-content-disposition=attachment%3B%20filename%3DFakeLocation_CN_v1.3.1.6_1569_20220824071825.apk&response-content-type=application%2Fvnd.android.package-archive |
+
 ## Prior public analyses cited in section 1.1 (archive.today, 2026-11-07)
 
 | Page | Original URL | Archive short link | Archive timestamp link |

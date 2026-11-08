@@ -19,14 +19,15 @@ request URL:
   activated; not live-tested)
 
 Path 2 also includes the startup requests `app/getAppConfigs` and `version/checkApkUpdate`, before
-user consent: every build examined except Play 1.5.2 runs su+sh; only Play 1.5.2 runs sh alone. The
-official-site/GitHub 1.5.2 version check is live-tested; the config request is static-confirmed only.
+user consent: every build examined except Play 1.5.2 runs su+sh; only Play 1.5.2 runs sh alone. In 1.3.1.6 the
+branch exists only on the config request. The official-site/GitHub 1.5.2 version check is live-tested;
+the config request is static-confirmed only.
 
 In the tested packed 1.5.2 builds, okhttp loads later than the default class loader, so the module hooks every
 `BaseDexClassLoader` constructor and installs the hook once a new loader can load the target class.
 Build with `gradle assembleDebug`; the resulting app-debug.apk takes effect once enabled in LSPosed
-with both packages in scope. Versions before 1.3.10 are not packed; their business code can be
-decompiled directly from the APK.
+with both packages in scope. Play builds before 1.3.10 are not packed; their business code can be
+decompiled directly from the APK. Official-site/GitHub 1.3.1.6 is already 360-packed.
 
 ## Class / method map (1.5.2; actual obfuscated names in the runtime-decrypted dex)
 

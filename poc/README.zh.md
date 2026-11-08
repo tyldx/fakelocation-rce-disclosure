@@ -15,11 +15,11 @@
 - ver/vfs → 同上 (通道三, 官网/GitHub 版后台轮询, 需激活 ROOT 模式, 未实测)
 
 通道二还包括早于用户同意发出的启动请求 `app/getAppConfigs` 与 `version/checkApkUpdate`: 除 Play 1.5.2 外,
-所有已检查构建均走 su+sh; 只有 Play 1.5.2 只走 sh。官网/GitHub 1.5.2 的版本检查已实测, 配置请求仅静态确认。
+所有已检查构建均走 su+sh; 只有 Play 1.5.2 只走 sh。1.3.1.6 仅配置请求有此分支。官网/GitHub 1.5.2 的版本检查已实测, 配置请求仅静态确认。
 
 实测的 1.5.2 加壳构建中, okhttp 晚于默认 loader, 故 hook 所有 BaseDexClassLoader 构造, 新 loader 能加载目标类时装钩。
 构建 `gradle assembleDebug`; 产物 app-debug.apk 在 LSPosed 启用并勾两个包作用域后生效。
-1.3.10 之前的版本未加壳, 业务代码可直接从 APK 反编译得到。
+1.3.10 之前的 Play 构建未加壳, 业务代码可直接从 APK 反编译得到; 官网/GitHub 1.3.1.6 已为 360 加固。
 
 ## 类/方法映射 (1.5.2; 运行时解密 dex 的实际混淆名)
 

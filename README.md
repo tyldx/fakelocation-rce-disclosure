@@ -7,7 +7,7 @@ Full report: [English](REPORT.en.md) | [中文](REPORT.zh.md)
 Security analysis of the Android app FakeLocation (packages `com.lerist.fakelocation` /
 `dev.lerist.fakelocation`, developer Lerist / Chengdu Lanyi Technology): the app contains an
 undocumented, server-controlled command execution capability; the generic-callback path can run as root,
-and fires at app startup before the user accepts the consent dialog. Affected versions: 1.3.2.1 through 1.5.2.
+and fires at app startup before the user accepts the consent dialog. Affected versions: 1.3.1.6 through 1.5.2.
 
 Reporter: [tyldx](https://github.com/tyldx) · contact tyldx@proton.me
 
