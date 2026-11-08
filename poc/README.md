@@ -4,7 +4,7 @@
 
 Demonstrates that a server response can make FakeLocation run arbitrary shell commands: an LSPosed
 module rewrites the okhttp response inside the app process, triggering the app's own command-execution
-branches. It does not contact the vendor's server, does not modify the app, and the
+branches. It does not modify the vendor's server or the app, and the
 injected command is only `id`. Results and evidence are in `results/RESULTS.md` and `results/`.
 
 ## Module (`xposed-rce-poc/`)
@@ -26,17 +26,9 @@ the config request is static-confirmed only.
 In the tested packed 1.5.2 builds, okhttp loads later than the default class loader, so the module hooks every
 `BaseDexClassLoader` constructor and installs the hook once a new loader can load the target class.
 Build with `gradle assembleDebug`; the resulting app-debug.apk takes effect once enabled in LSPosed
-with both packages in scope. Play builds before 1.3.10 are not packed; their business code can be
-decompiled directly from the APK. Official-site/GitHub 1.3.1.6 is already 360-packed.
+with both packages in scope.
 
-## Class / method map (1.5.2; actual obfuscated names in the runtime-decrypted dex)
-
-- Command sink: Play `fv2.ළ(String[], boolean su, boolean)` / official-site-GitHub build `z41`,
-  `C13588.m51168`, internally `exec(su ? "su" : "sh")`.
-- Synchronous generic callback su+sh: Play `C3685.m13605` / official-site-GitHub build `C5901`, on `code==10000`
-  runs su + sh.
-- getNotices sh: Play `C6073` / official-site-GitHub build `C11241`,
-  `string().startsWith("10000:")` → `sh -c`.
+Class and method names are in section 4 of the [report](../REPORT.en.md).
 
 ## Results
 

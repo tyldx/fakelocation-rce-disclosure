@@ -4,7 +4,7 @@
 
 2026-11-05. Pixel 9 (KernelSU). Method: the LSPosed module com.fl.rcepoc hooks only
 `okhttp3.internal.http.RealInterceptorChain.proceed` and rewrites the response body by URL, triggering
-the app's own code. It does not contact the vendor's server, does not modify the app, and the injected
+the app's own code. It does not modify the vendor's server or the app, and the injected
 command is only `id`.
 
 ## Verification matrix
@@ -42,3 +42,9 @@ Client-side verification (responses injected locally); it proves the client exec
 commands, and does not prove the vendor's server currently sends them. The primary evidence is the
 static code branches. Path 3 was not live-tested (its poller starts only after ROOT mode is activated,
 which also triggers the app's own injection and anti-tamper, so it was not driven, to avoid side effects).
+
+Record limits: for path 1 before consent, the experiment notes show uiautomator reporting the "Agree"
+button on screen and untapped with topResumedActivity=MainActivity; no raw UI or input records were
+found. For the official-site/GitHub 1.5.2 version check, the consent dialog state rests on the screenshot;
+raw UI records were not preserved. That run's module added a matching rewrite branch to the baseline,
+reverted afterwards.

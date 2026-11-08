@@ -21,7 +21,7 @@ Reporter: [tyldx](https://github.com/tyldx) · contact tyldx@proton.me
   the `id` command outputs and other evidence.
 - [`hashes/`](hashes/): sample SHA-256 values.
 - [`tools/`](tools/): [`md2html.py`](tools/md2html.py) renders a report to HTML, which is then printed to the PDF.
-- [`evidence/archive-urls.md`](evidence/archive-urls.md): archive.today links for the official site, policy pages, store, and repo.
+- [`evidence/archive-urls.md`](evidence/archive-urls.md): archive links for the official site, policy pages, store, and repo.
 
 ## Not included
 

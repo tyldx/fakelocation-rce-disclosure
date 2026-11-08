@@ -3,7 +3,7 @@
 [English](README.md)
 
 证明服务端响应能让 FakeLocation 执行任意 shell 命令: LSPosed 模块在 App 进程内改写 okhttp 响应,
-触发 App 自身的命令执行分支。不碰厂商服务器、不改 App 文件, 注入命令仅为 `id`。
+触发 App 自身的命令执行分支。不修改厂商服务器与 App 文件, 注入命令仅为 `id`。
 结果与证据见 `results/RESULTS.md` 与 `results/`。
 
 ## 模块 (`xposed-rce-poc/`)
@@ -19,14 +19,8 @@
 
 实测的 1.5.2 加壳构建中, okhttp 晚于默认 loader, 故 hook 所有 BaseDexClassLoader 构造, 新 loader 能加载目标类时装钩。
 构建 `gradle assembleDebug`; 产物 app-debug.apk 在 LSPosed 启用并勾两个包作用域后生效。
-1.3.10 之前的 Play 构建未加壳, 业务代码可直接从 APK 反编译得到; 官网/GitHub 1.3.1.6 已为 360 加固。
 
-## 类/方法映射 (1.5.2; 运行时解密 dex 的实际混淆名)
-
-- 命令出口: Play `fv2.ළ(String[], boolean su, boolean)` / 官网-GitHub 版 `z41`、`C13588.m51168`,
-  内部 `exec(su ? "su" : "sh")`。
-- 同步通用回调 su+sh: Play `C3685.m13605` / 官网-GitHub 版 `C5901`, `code==10000` 时 su + sh。
-- getNotices sh: Play `C6073` / 官网-GitHub 版 `C11241`, `string().startsWith("10000:")` → `sh -c`。
+类与方法名见[报告](../REPORT.zh.md)第 4 节。
 
 ## 结果
 

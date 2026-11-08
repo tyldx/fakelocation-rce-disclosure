@@ -18,7 +18,7 @@
   okhttp 响应, 触发 App 自身命令执行分支; 版本检查实验所用变体未收录, 见报告第 6 节);[`results/`](poc/results/) 是 `id` 命令输出等证据。
 - [`hashes/`](hashes/): 样本 SHA-256。
 - [`tools/`](tools/): [`md2html.py`](tools/md2html.py) 将报告转为 HTML,再打印为 PDF。
-- [`evidence/archive-urls.md`](evidence/archive-urls.md): 官网/政策页/商店/仓库的 archive.today 存档链接。
+- [`evidence/archive-urls.md`](evidence/archive-urls.md): 官网/政策页/商店/仓库的存档链接。
 
 ## 不包含
 
