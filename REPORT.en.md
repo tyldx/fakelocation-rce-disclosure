@@ -4,7 +4,7 @@ Reporter: [tyldx](https://github.com/tyldx) · tyldx@proton.me · 2026-11 · rev
 
 ## 1. Summary and related work
 
-FakeLocation is an Android app for simulating the device's GPS location and routes; an optional ROOT mode requires the user to grant root access. The app contains server-controlled command execution that is not disclosed to users: through three paths (numbered in section 4), the server can make the app run arbitrary shell commands; two of them run through `su`, and one fires before the user accepts the first-run consent dialog. Neither the privacy policy nor the user agreement discloses this capability (section 3.1).
+FakeLocation is an Android app for simulating the device's GPS location and routes; an optional ROOT mode requires the user to grant root access. The app contains server-controlled command execution that is not disclosed to users: through three paths (numbered in section 4), the server can make the app run arbitrary shell commands; two of them run through `su`, and some fire before the user accepts the first-run consent dialog. Neither the privacy policy nor the user agreement discloses this capability (section 3.1).
 
 All 9 versions examined (1.3.1.6 through 1.5.2; see section 2) are affected, and the capability has existed since August 2022 at the latest. Score: 8.3 (CVSS v3.1) / 9.0 (v4.0). Certificate pinning prevents an arbitrary network attacker from triggering these paths by man-in-the-middle; the only parties able to trigger them are the developer and anyone who compromises its server or steals its key (see section 5). From 1.3.10 on, the relevant code exists only in a runtime-decrypted dex.
 
